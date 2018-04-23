@@ -1,0 +1,60 @@
+
+	  
+	  
+	  
+	  <!DOCTYPE html>
+<html>
+
+  <head>
+
+
+
+  </head>
+
+  
+  
+  <body>
+     
+  <img id="myCanvas">
+    <script>
+	
+	
+       var img =  document.createElement("IMG");
+     img.src = "https://d15shllkswkct0.cloudfront.net/wp-content/blogs.dir/1/files/2013/05/delete-button.jpg";
+	 img.onload = function (){   
+       
+	   var xxx = document.getElementById("myCanvas");
+
+        xxx.src =  resizeInCanvas(img);
+	 
+}
+
+
+
+	function resizeInCanvas(img){
+  /////////  3-3 manipulate image
+    var perferedWidth = 2700;
+  var ratio = perferedWidth / img.width;
+  var canvas = $("<canvas>")[0];
+  canvas.width = img.width * ratio;
+  canvas.height = img.height * ratio;
+  var ctx = canvas.getContext("2d");
+  ctx.drawImage(img, 0,0,canvas.width, canvas.height);
+  //////////4. export as dataUrl
+  
+  alert(canvas);
+  
+  return canvas.toDataURL();
+}
+    </script>
+  
+  
+  
+
+
+  </body>
+
+</html>
+
+
+

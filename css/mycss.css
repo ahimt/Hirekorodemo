@@ -1,0 +1,1253 @@
+
+body{
+   
+   position : relative;
+   background: #33bbff;
+   text-shadow: 0.7px 0.7px  #bfbfbf;
+
+	
+	
+}
+
+#Loader{
+	margin-top : 200px;
+}
+
+.loader {
+	
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);	
+  border: 5px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 5px solid #8c8c8c;
+  width: 50px;
+  height: 50px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 1.2s linear infinite;
+  z-index: 1;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+
+.rotatorclass{
+	
+	    width : 35px;
+		height : 35px;
+	    border: 5px solid #f3f3f3;
+        border-radius: 50%;
+		border-top: 8px solid #3498db;
+		-webkit-animation: spin 2s linear infinite;
+        animation: spin 2s linear infinite;
+		transform: translateX(-50%) translateY(-50%);
+		overflow: hidden;
+	
+	
+}
+
+div.header {                         
+	transition : 0.05s;
+	z-index : 1;
+	color : white;
+	position : fixed;
+	top : 0;
+	box-shadow: 1px 1px 1px black;
+	height : 47px;
+	width  : 100%;
+    background : #33bbff;
+}
+
+
+.ContainerH{
+	
+	position : relative;
+	margin : 0px auto;
+	width : 100%;
+    max-width : 650px;	
+	height : 100%;
+		
+	
+}
+
+
+
+.MenuButton{
+	
+	position : absolute;
+	top : 0;
+	left : 0;
+	font-size: 25px;
+	padding-top : 5px;
+	text-align : center;	
+	height : 50px;
+	width : 40px;
+	
+
+	
+}
+
+.NotificationButton{
+	
+	position : absolute;
+	top : 0;
+	right : 0;
+	font-size: 25px;
+	padding-top : 5px;
+	text-align : center;	
+	height : 50px;
+	width : 40px;
+	
+}
+
+.notiNumberClass{
+	
+	box-shadow: 1px 1px 1px black;
+    margin : 0px auto;
+	padding : 5px 0px 0px 0px;
+	height : 26px;
+	width : 40px;
+	overflow: hidden;
+	background : red;
+	color : white;
+	border-radius : 10px;
+	font-size : 11px;
+	text-align : center;
+	font-weight : bold;
+	
+	
+	
+}
+
+.LogoBar{
+	
+	font-weight : bold;
+	text-align : center;
+	padding-top : 15px;
+	margin : 0px 45px 0px 45px;
+	height : 50px;
+	width : auto;
+	
+	
+}
+
+div.Menu {    
+       
+    z-index : 1;	   
+	padding-right : 1px;
+	overflow : hidden;
+	transition : 0.3s;
+	color : black;
+	position : fixed;
+	top : 0;
+	left : 0;
+	height : 100%;
+	width  : 0px;
+	background: linear-gradient(to right, white, #f2f2f2);
+	
+}
+
+div.Menu .CloseMenuButton{
+	
+	color : white;
+	position : absolute;
+	top : 0;
+	right: 0;
+	padding : 10px 10px  10px 10px ;
+	font-size:20px;
+	
+	
+}
+
+
+
+.PageTitleBox{	
+	
+    color : white;	
+	height : 80px;
+	width : 100%;
+	background: linear-gradient(to right, #33bbff, #0099e6);
+	box-shadow: 1px 1px 1px black;
+	
+}
+
+#PageTitleIcon{
+	
+	margin-top : 20px;
+	margin-left : 40px;
+	color : white;
+	font-size : xx-large;
+	
+}
+
+
+.MenuContents{	
+	
+	padding-top : 15px;
+	padding-bottom : 100px;
+	height : 100%;
+	width : 100%;	
+	overflow-y : scroll;
+	overflow: -moz-scrollbars-none;
+	-webkit-overflow-scrolling: touch; 	
+	
+}
+.MenuContents::-webkit-scrollbar { 
+    display: none;  
+} 
+
+.ContainerCover{
+	
+	
+   	
+	padding : 47px 0px 0px 0px;
+	height: 100%;
+    width: 100%;
+    position: relative;
+	
+ 	 
+}
+
+.SearchBox{
+	transition : 0.05s;
+	overflow : hidden;
+	z-index : 1;
+	position : fixed;
+	bottom : 0;
+	width : 100%;
+	height : 0px;
+}
+
+#FilterButtonID{
+	box-shadow: 2px 2px 2px gray;
+	float : left;
+	padding-top : 5px;
+	margin-right : 5px;
+	font-size : large ;
+    border-radius : 50%;
+    background : yellow;
+    width : 30px;
+    height : 30px;
+    text-align : center;	
+}
+
+.SearchBoxContainer{
+    overflow : hidden;
+	width : auto;
+	background : red;
+	height : 100%;
+}
+ 
+.Container{	
+	position : relative;
+	padding : 1px 3px 20px 3px;   
+	margin : 0px auto; 
+	max-width : 650px;
+	height: 100%;
+    width: 100%;
+	overflow: scroll;
+	overflow: -moz-scrollbars-none;
+	-webkit-overflow-scrolling: touch; 
+    
+	 
+}
+
+
+ 
+.Container::-webkit-scrollbar { 
+    display: none;  
+} 
+
+.MenuNavigation{
+	 
+	 color : #595959;
+	 height : 55px;
+	 width : 100%;
+	 overflow : hidden;  
+	 transition : 0.7s;
+	
+}
+ 
+.MenuNavigation:hover {
+   
+  background : #cccccc;
+  font-weight : bold;
+
+}
+
+.MenuNavigation .notiNumberClass{
+	
+	margin-top : 17px;
+}
+
+
+#NaviIcon{
+	 
+	text-align : center;
+	width : 45px;
+	float : left; 
+	font-size:18px; 
+	margin : 20px 0px 0px 30px;
+	
+	 
+ }
+ 
+
+ 
+ .NaviText{
+	
+	width : 100px;
+	font-family: Tahoma;
+    float : left;
+	font-size:16px; 
+	margin : 17px 0px 0px 0px;
+	 
+ }
+ 
+
+ 
+.LoginDiv{
+	 
+	margin-top : 10%;
+	margin-bottom : 10%;
+	overflow : hidden;
+	height :auto;
+	width : auto;
+	 
+}
+ 
+ 
+ 
+.SignInLogo{
+	 
+	 margin : 20px auto;
+	 background : red;
+	 height : 0px;
+	 width : 200px;
+	 transition : 1s;
+	 
+}
+ 
+.TermsAndCondition{
+	 
+     position : absolute;
+	 top : 0;
+	 right : 0;
+	 overflow : hidden;
+	 height : 100%;
+	 width : 0px;
+	 transition : 0.4s;
+	 
+}
+ 
+.TermsAndConditionBox{
+	 
+	 
+	 position : relative;
+	 margin : 50px auto;
+	 height : 75%;	 
+	 width : 70%;
+	 max-width : 450px;
+	 
+}
+ 
+.TermsAndConditionText{
+	 
+	
+	 height : 70%;	 
+	 width : 100%;
+	 background : white;
+	 overflow-y : scroll;
+	 
+	 
+}
+ 
+ .AgreeButton{
+	 
+	
+	 margin-top : 25px;
+	 height : 35px;	 
+	 width : 100%;
+	 
+ }
+ 
+ 
+.GreenTickMarkDiv{
+	
+	    position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+		width: 55px;
+        height: 55px;
+	    z-index: 1;
+		border-radius: 50%;
+		transition: 0.25s;
+		
+}
+
+.SampleAdCover{
+	
+	margin-top : 10px;
+	margin-bottom : 10px;
+	width  : 100%;
+	height : 70px;
+	overflow : auto;
+
+}
+
+.SampleLeftSideDiv{
+	
+	color : white;
+    font-size: 36px;
+	text-align : center;
+	border-radius : 5px;
+	float : left;
+	width  : 70px;
+	height : 97%;
+    background : linear-gradient(to right, #9933ff, #cc99ff);
+	box-shadow: 1px 1px 1px 1px gray;	
+	
+}
+
+.SampleRightSideDiv{
+	
+	margin-top : 10px;
+	margin-right : 2px;
+  	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	background : white;
+	width : auto;
+	height : 50px;
+	overflow: hidden;	
+	box-shadow: 1px 1px 1px 1px gray;
+}
+
+@media screen and (min-width: 650px) {
+   
+ .SampleAdCover{
+	
+	height : 100px;	
+	
+}
+
+.SampleLeftSideDiv{
+	
+	width  : 100px;	
+	font-size: 55px;
+	
+}
+
+.SampleRightSideDiv{
+	
+   margin-top : 15px;
+   height : 70px;
+}
+  
+}
+
+#SampleLeftICON{
+	
+  margin-top : 15px;
+	
+}
+
+
+.SampleRightText{
+
+   margin-top : 8px;
+   margin-left : 15px;
+   font-size : 20px;
+	
+}
+
+@media screen and (min-width: 650px) {
+	
+#SampleLeftICON{
+	
+  margin-top : 20px;
+	
+}	
+
+.SampleRightText{
+
+   font-size : 30px;
+	
+}
+
+}
+
+.FileCover{
+	
+ 	overflow : hidden;
+	transition : 0.5s;
+	
+}
+
+.LocationInvisDiv{
+ 
+ overflow : hidden;
+ height : 0px;
+ width : 0px;
+	
+}
+
+.TenPixel{
+	
+  height : 1px;
+  width : 100%;
+	
+	
+}
+
+#PostITbuttonForForm{
+
+	margin-bottom : 50px;
+}
+
+.AllAdsColum{
+	
+	background : white;
+	text-shadow: 1px 1px #bfbfbf;
+	margin-top : 10px;
+	margin-bottom : 10px;
+    box-shadow: 3px 3px 3px gray;
+	width : 100%;
+	height : 130px;
+  
+}
+
+.AllAdsLeftside{
+
+    position: relative;
+	float : left;
+	height : 100%;
+	width : 85px;
+    padding : 45px 5px 5px 5px;
+	
+}
+
+.AllAdsRightside{
+ 
+	margin-top : 5px;
+	height : 100%;
+	width : auto;
+	overflow : hidden;
+	padding : 10px 5px 5px 10px;
+    position: relative;
+
+}
+
+.AllAdsTitle{
+	
+	width : 100%;
+	height : auto;
+	justify-content: center;	
+	overflow: hidden;
+	text-overflow: ellipsis;
+    font-size: 19px;
+	font-weight: bold;
+	color : black;
+	
+}
+
+.AllAdsImage{
+	
+	width : 40px;
+
+}
+
+.AllAdsImageFrame{
+	
+	box-shadow: 3px 3px 3px 3px gray;
+    margin-bottom : 5px;
+	width : 40px;
+	height : 40px;
+	border-radius: 50%;
+	overflow : hidden;
+	
+}
+
+.AllAdsPrice{
+	
+	height : 27px;
+	width : 105%;
+	box-shadow: 3px 3px 3px gray;
+	margin-top : 5px;
+	margin-right : 8px;
+	font-size: large;
+	text-align : center;
+	font-weight: bold;
+	color : white;
+	border-radius : 2px;
+	position: absolute; 
+	right: 0; 
+	top : 0;
+	
+	
+}
+
+.AllAdsLocationTimeLeft{
+  
+	height :auto;
+	width : 100%;
+	overflow: hidden;
+	font-size: small;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+    padding : 2px 2px 2px 2px; 
+
+}
+
+@media screen and (min-width: 650px) {
+   
+  .AllAdsColum{
+	
+	border-radius: 3px;
+  }
+  
+  
+.AllAdsLeftside{
+	
+	padding : 55px 10px 10px 15px;
+	width : 120px;
+   
+
+	
+}
+
+.AllAdsTitle{
+	
+		
+	 font-size: 22px;
+	
+}
+ 
+.AllAdsLocationTimeLeft{
+	
+    
+
+	font-size: medium;
+
+
+	
+	
+} 
+ 
+ .AllAdsPrice{
+	
+     height : 35px;
+	 font-size: x-large;
+	
+	
+}
+ 
+ 
+   
+}
+
+
+
+@media screen and (max-width: 310px) {
+   
+  .AllAdsColum{
+	  
+	  width : 320px;
+   
+	
+   }
+   
+   
+}
+
+.InfoSideAggrementsAcceptButton{
+	
+	box-shadow: 3px 3px 3px gray;	
+	width : 90px;
+	border-radius : 1px;
+	float : right;
+	padding : 2px 0px 2px 0px;
+	color : white;
+	background : #0077b3;
+	border : 0px;
+	position: absolute; 
+	
+	
+}
+
+.AllAdsColum .InfoSideAggrementsAcceptButton{
+	right: 0; 
+	bottom: 0;
+	margin-bottom : 8px;
+	margin-right : 8px;
+}
+
+.SearchAdsFullViewContainer .AllAdsImageFrame{
+	width : 70px;
+	height : 70px;
+} 
+
+.SearchAdsFullViewContainer .AllAdsImage{
+	width : 70px;
+} 
+ 
+
+.SearchAdsFullViewContainer{
+	
+	margin-top : 10px;
+	background : white;
+	height : auto;
+	padding : 20px 20px 20px 20px;	
+	box-shadow: 3px 3px 3px gray;
+	border-radius : 10px;
+	font-size : large;
+}
+
+
+
+.SearchAdsFullViewH2Title{
+	
+	margin-top : 10px;
+	margin-bottom : 10px;
+	background : white;
+	padding : 10px 10px 10px 20px;
+	width : 100%;
+	font-size: x-large;
+	box-shadow: 3px 3px 3px gray;
+	border-radius : 10px;
+	
+	
+}
+
+.EditSearchAdsFullViewContainer{
+	
+	float : right;
+	font-size : small;
+	
+}
+
+.SearchAdsInfoCalum{
+		
+	margin : 15px 0px 15px 0px;
+    font-size : large;
+	height : auto;
+	width : 100%;
+    padding-left : 5px;
+
+}
+
+.SearchAdsInfoCalum2{
+		
+	float : left;	
+	margin : 15px 0px 15px 0px;
+    font-size : large;
+	height : auto;
+	width : 100%;
+    padding-left : 5px;
+
+}
+
+#FullViewMapMarker{
+	width : 20px;
+	text-align : center;
+	color :red;
+	margin-right : 6px;
+}
+
+#FullViewClockMarker{
+	width : 20px;
+	text-align : center;
+	margin-right : 5px;
+}
+
+.SearchAdsInfoCalumleftSide{
+   
+	height : 100%;
+	width : 100px;    
+	float : left;
+	
+}
+
+
+.SearchAdsInfoCalumrightSide{
+
+	height : 100%;
+	width : auto;	
+	font-size : large;
+	
+	
+	
+}
+
+.PosterName{
+	
+	margin-top : 5px;
+	font-size : 17px;
+	color : #0099e6;
+	font-weight : bold;
+}
+
+
+
+
+
+.SearchAdsFullViewPriceTag{
+	
+	width : 100%;
+	height : 150px;
+	border:1px solid;
+    border-color:#80bfff; 
+	border-radius: 10px;
+	overflow : hidden;
+	margin-top : 30px;
+    margin-bottom : 20px;
+    box-shadow: 2px 2px 2px gray;
+	
+}
+
+
+
+#SearchAdsFullViewPriceTagTitleIcon{
+	
+	height : 30px;
+	width : 100%;
+	background : #4dff4d;
+	overflow : hidden;
+	text-align : center;
+    font-size: xx-large;
+	color : green;
+	
+}
+
+.SearchAdsFullViewPriceText{
+	
+	  margin-top : 25px;
+	  font-size: 40px;
+	  text-align : center;
+	  font-weight : bold;
+	  color : #00cc00;
+
+	
+}
+
+.SearchAdsFullViewDESCRIPTION{
+	
+	margin : 35px 0px 10px 0px;
+	font-weight : bold;
+	border-radius : 10px;
+	width : 100%;
+	height : auto;
+	color : white;
+	background : #bfbfbf;
+	text-align : center;
+	box-shadow: 2px 2px 2px gray;
+}
+
+.thumbNAILIMG {
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+}
+
+/* Modal Content (image) */
+.modal-content {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-width: 700px;
+}
+
+
+
+/* Add Animation */
+.modal-content, #caption {    
+    -webkit-animation-name: zoom;
+    -webkit-animation-duration: 0.6s;
+    animation-name: zoom;
+    animation-duration: 0.6s;
+}
+
+@-webkit-keyframes zoom {
+    from {-webkit-transform:scale(0)} 
+    to {-webkit-transform:scale(1)}
+}
+
+@keyframes zoom {
+    from {transform:scale(0)} 
+    to {transform:scale(1)}
+}
+
+/* The Close Button */
+.Modalclose {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.Modalclose:hover,
+.Modalclose:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* 100% Image Width on Smaller Screens */
+@media only screen and (max-width: 700px){
+    .modal-content {
+        width: 100%;
+    }
+}
+
+
+.MakeAnOfferButton{
+	
+	padding-top : 5px;
+	padding-bottom : 5px;
+	margin-top : 20px;
+	margin-bottom : 20px;
+	width : 100%;
+	background : #00e600;
+	color : white;
+    border-radius: 5px;
+	text-align : center;
+    font-size: x-large;
+    box-shadow: 2px 2px 2px gray;
+}
+
+.AdQuestionWriterColum{
+	
+	margin-top : 5px;
+	width : 100%;
+	height : 65px;
+	
+}
+
+.SubmitButtonQuesWriter{
+	
+    padding-left : 7px;
+	padding-top  : 15px;
+	font-size: 30px;
+	color: #33bbff;
+	float : right;
+	width : 40px;
+	height : 100%;
+	
+}
+
+.ConversationInputFieldFRAME{
+	margin-bottom : 30px;
+	padding : 5px 10px 0px 10px;
+	width : auto;
+	height : 65px;
+	overflow : hidden;
+}
+
+#ConversationInputField{
+
+  transition : 0.3s;
+  width : 100%;
+  box-shadow: 1px 1px 1px gray;
+  height : 35px;
+  padding-left: 40px;
+  border-radius : 25px;
+  margin-top : 7px;
+  margin-bottom : 20px;
+  background-image: url(../img/MessageIcon.png);
+  background-position: 7px 7px;
+  background-repeat: no-repeat;
+
+}
+
+.AllinOneDivContainer{
+	
+	box-shadow: 3px 3px 3px gray;
+	width : 100%;
+	max-width : 650px;
+	background : white;
+	height : auto;
+	border-radius: 3px;
+	padding : 10px 10px 10px 10px;
+	margin-bottom : 50px;
+	
+}
+
+.PriceAmount{
+	
+	color : black;
+	height : 100%;
+	width : auto;
+	overflow : hidden;
+	text-align : center;
+
+	
+}
+
+
+.PriceIncreaserDiv{
+	
+	margin-top : 30px;
+	font-size : 35px;
+	width : 100%;
+	height : auto;
+	margin-bottom : 30px;
+
+	
+	
+}
+
+@media screen and (min-width: 650px) {
+	
+.PriceIncreaserDiv{
+	
+	font-size : 48px;
+
+
+	
+	
+}
+	
+	
+}
+
+
+.PriceAmountMinus{
+	
+	text-align : right;
+	float : left;
+    height : 100%;
+	padding-left :15%;
+	padding-right: 10px;
+    
+	
+}
+
+.PriceAmountPlus{
+	
+	text-align : left;
+	float : right;
+    height : 100%;
+	padding-right :15%;
+	padding-left: 10px;
+	
+}
+
+
+.Cover{
+	margin-top : 10px;
+	padding-left : 7px;
+	width : 100%;
+	min-height : 75px;
+	border-radius: 3px;
+	background : #4da6ff;
+
+}
+
+
+
+@media screen and (max-width: 310px) {
+   
+  .Cover{
+	  
+	  width : 320px;
+   
+	
+   }
+
+   
+}
+
+.MyAggrementsColumn{
+	
+	
+	padding : 0px 5px 5px 5px;
+	background : white;
+	box-shadow: 2px 2px 2px 2px gray;
+	position : relative;
+	
+}
+
+
+
+.MyAggrementsColumn .AllAdsImageFrame{
+	width : 50px;
+	height: 50px;
+	box-shadow: 2px 2px 2px gray;
+}	
+
+.MyAggrementsColumn .AllAdsImage{
+	width : 50px;
+}
+
+.MyAggrementsColumn .InfoSideAggrementsAcceptButton{
+	margin-top : 8px;
+	margin-right : 8px;
+	right: 0; 
+	top: 0;
+	width : 60px;
+}
+
+.ImageSideAggrements{
+	
+    margin-top : 10px;
+	float : left;
+	height : 100%;	
+	width : 65px;
+
+}
+
+.InfoSideAggrements{
+	
+	overflow : hidden;
+	height : 100%;	
+	width : auto;
+	font-size : small;
+
+}
+
+@media screen and (min-width: 650px) {
+	
+   .InfoSideAggrements{	
+	font-size : medium;
+   }	
+}
+
+.ViewMoreButton{
+	
+	padding : 10px 10px 10px 10px;	 
+	width : 100%;
+	height : auto;
+	color : blue;
+	text-align: center;
+
+	
+}
+
+.CommentColumn{
+	margin-top : 10px;
+	padding : 5px 5px 5px 20px;	
+	overflow : hidden;
+	box-shadow: 2px 2px 2px gray;
+}
+
+.ReplyColumn{
+	margin-top : 10px;
+	padding : 5px 5px 5px 50px;	
+	overflow : hidden;
+	box-shadow: 2px 2px 2px gray;
+}
+
+.leftSideComment{
+	float : left;
+	width : 50px;
+	height : auto;
+	background : white;
+}
+
+.leftSideComment .AllAdsImageFrame{
+	width : 40px;
+	height : 40px;
+}
+.leftSideComment .AllAdsImage{
+	width : 40px;
+}
+
+.rightSideComment{
+    position : relative;
+	padding : 5px 5px 5px 5px;
+	width : auto;
+	height : auto;
+	overflow : hidden;
+	
+}
+
+.rightSideComment .PosterName{
+	margin: 5px 5px 5px 5px;
+	font-size : 15px;
+	color : #0099e6;
+	font-weight : bold;
+}
+
+.commentPara{
+	border-radius : 30px;
+	width : auto;
+	height : auto;
+	padding : 20px 20px 20px 20px;	
+	background : #e6e6e6;
+	color      : black;
+}
+
+.TimeComment{
+	margin-top : 10px;
+	font-size : small;
+	float : right;
+}
+
+#reportIcon{
+	margin : 5px 5px 5px 5px;
+	position : absolute;
+	top : 0;
+	right : 0;
+	
+}
+
+.AggreementDesBox{
+	height : 200px;
+	width : 100%;
+	background : #f2f2f2;
+	padding : 20px 20px 20px 20px;
+	margin-bottom : 10px;
+	border-radius : 10px;
+	box-shadow: 2px 2px 2px gray;
+	overflow-y : scroll;
+}
+
+.LegalInfo{
+	text-align : left;
+	font-size : small;
+	font-family : Verdana;
+}
+
+
+.LegalInfoTitle{
+	text-align : center;
+	font-size : small;
+	font-family : Verdana;
+}
+
+.StopWatchDiv{	
+	width : 100%;
+	text-align : center;
+	font-size : x-large;
+	color : red;
+	font-weight: bolder;
+}
