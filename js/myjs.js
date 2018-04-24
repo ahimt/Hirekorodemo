@@ -1937,7 +1937,7 @@ function AllAdsCreator(AdObject,conn){
 	var AllAdsColum =  document.createElement("DIV");
 	AllAdsColum.className = "AllAdsColum";
 	AllAdsColum.id = AdID;
-	AllAdsColum.innerHTML = "<p class ='DEStoTIME' hidden>" + AdObject.postedTime + " </p>"; 
+	AllAdsColum.innerHTML = "<p class ='DEStoTIME' hidden>" + AdObject.mainadinfo.postedTime  + " </p>"; 
 	AllAdsColum.onclick = function(){
 		 
 	    SearchAdsFullViewCreator(AdObject);
@@ -1995,8 +1995,6 @@ function SearchAdsFullViewCreator(AdObject){
    ContainerSearchAds.style.display = "none";
    ContainerMyAds.style.display = "none";
    Container.innerHTML = "";
-   ContainerApplications.innerHTML = "";
-   ContainerApplications.style.display = "none";
    
    SearchBoxLOCKER = false;	
    if(SearchBox != null){SearchBox.style.height = "0px";}
