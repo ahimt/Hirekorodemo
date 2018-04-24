@@ -3099,8 +3099,6 @@ function SortingDivElmentsTimeASC(MainContainer,NameClass){
 	var DataLengthLimit = 10;
 	var firestore1 = firebase.firestore().collection("Agreements")
 	                                    .where("adposterID", "==", UserID);
-	var firestore2 = firebase.firestore().collection("Agreements")
-	                                    .where("offerposter", "==", UserID);
 										
 	ContainerMyAggrements.style.display = "block";
    	ContainerMyAggrements.innerHTML = "";
@@ -3129,22 +3127,7 @@ function SortingDivElmentsTimeASC(MainContainer,NameClass){
 
 	});
 	
-	var ThisRef2 = firestore2.orderBy("postedTime", "desc").limit(DataLengthLimit); 
-	ThisRef2.get().then(function(ONEquerySnapshot) {
-  
-	LastAggrementOfferPost = ONEquerySnapshot.docs[ONEquerySnapshot.docs.length - 1];
-	
-	
-    ONEquerySnapshot.forEach(function(ONEdoc) {
-	
-       
-	      AggrementsColumnCreator(ONEdoc.data());
-         
-		});
-		
-		
 
-	});
   
        OnScrollFunction();
     function OnScrollFunction(){
@@ -3172,22 +3155,7 @@ function SortingDivElmentsTimeASC(MainContainer,NameClass){
 
 	});
 	
-	var ThisRef2 = firestore2.orderBy("postedTime", "desc").limit(DataLengthLimit).startAfter(LastSearchAdOBJECTS); 
-	ThisRef2.get().then(function(ONEquerySnapshot) {
-  
-	LastAggrementOBJECT = ONEquerySnapshot.docs[ONEquerySnapshot.docs.length - 1];
-	
-	
-    ONEquerySnapshot.forEach(function(ONEdoc) {
-	
-       
-	      AggrementsColumnCreator(ONEdoc.data());
-         
-		});
-		
-		
 
-	});
 					   
 		            
             
