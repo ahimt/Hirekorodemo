@@ -231,6 +231,9 @@ var LogoBar = document.createElement("DIV");            // Creating the LogoBar 
 	AggreementButton.innerHTML = "<div id = 'NaviIcon' class='fa fa-handshake-o'></div> <p class = 'NaviText' >Agreements</p> <div id = 'MessagesNotification' class='notiNumberClass'>0 </div>";
 	MenuContents.appendChild(AggreementButton);
 	
+	
+	/*
+	
 	JobRequestsButton = document.createElement("DIV");            // Creating the JobRequestsButton Goes In MenuContents
 	JobRequestsButton.className = "MenuNavigation";
 	JobRequestsButton.onclick = function(){
@@ -238,6 +241,8 @@ var LogoBar = document.createElement("DIV");            // Creating the LogoBar 
 	}
 	JobRequestsButton.innerHTML = "<div id = 'NaviIcon' class='fa fa-question-circle'></div> <p class = 'NaviText' >Requests</p> <div id = 'JobRequestNotification' class='notiNumberClass'> 0 </div>";
 	MenuContents.appendChild(JobRequestsButton);
+	
+	*/
 	
 	MyProfileButton = document.createElement("DIV");            // Creating the MyProfileButton Goes In MenuContents
 	MyProfileButton.className = "MenuNavigation";
@@ -247,6 +252,8 @@ var LogoBar = document.createElement("DIV");            // Creating the LogoBar 
 	MyProfileButton.innerHTML = "<div id = 'NaviIcon' class='fa fa-user'></div> <p class = 'NaviText' >My Profile</p>";
 	MenuContents.appendChild(MyProfileButton);
 	
+	/*
+	
 	DashboardButton = document.createElement("DIV");            // Creating the DashboardButton Goes In MenuContents
 	DashboardButton.className = "MenuNavigation";
 	DashboardButton.onclick = function(){
@@ -254,6 +261,8 @@ var LogoBar = document.createElement("DIV");            // Creating the LogoBar 
 	}
 	DashboardButton.innerHTML = "<div id = 'NaviIcon' class='fa fa-briefcase'></div> <p class = 'NaviText' >Dashboard</p>";
 	MenuContents.appendChild(DashboardButton);
+	
+	*/
 	
 	MyActivityButton = document.createElement("DIV");            // Creating the MyActivityButton Goes In MenuContents
 	MyActivityButton.className = "MenuNavigation";
@@ -263,6 +272,8 @@ var LogoBar = document.createElement("DIV");            // Creating the LogoBar 
 	MyActivityButton.innerHTML = "<div id = 'NaviIcon' class='fa fa-calendar-check-o'></div> <p class = 'NaviText' >My Activity</p>";
 	MenuContents.appendChild(MyActivityButton);
 	
+	/*
+	
 	FeedbacksButton = document.createElement("DIV");            // Creating the FeedbacksButton Goes In MenuContents
 	FeedbacksButton.className = "MenuNavigation";
 	FeedbacksButton.onclick = function(){
@@ -271,6 +282,8 @@ var LogoBar = document.createElement("DIV");            // Creating the LogoBar 
 	FeedbacksButton.innerHTML = "<div id = 'NaviIcon' class='fa fa-star-half-empty'></div> <p class = 'NaviText' >Feedbacks</p>";
 	MenuContents.appendChild(FeedbacksButton);
 	
+	
+	
 	PaymentsButton = document.createElement("DIV");            // Creating the PaymentsButton Goes In MenuContents
 	PaymentsButton.className = "MenuNavigation";
 	PaymentsButton.onclick = function(){
@@ -278,6 +291,8 @@ var LogoBar = document.createElement("DIV");            // Creating the LogoBar 
 	}
 	PaymentsButton.innerHTML = "<div id = 'NaviIcon' class='fa fa-money'></div> <p class = 'NaviText' >Payments</p>";
 	MenuContents.appendChild(PaymentsButton);
+	
+	*/
 	
 	HelpButton = document.createElement("DIV");            // Creating the HelpButton Goes In MenuContents
 	HelpButton.className = "MenuNavigation";
