@@ -35,11 +35,10 @@
 
 	<script src="https://sdk.accountkit.com/en_US/sdk.js"></script>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBywToQf_40jv2DFAyCDvkHDUbFHGNOSrM&libraries=places&callback=initAutocomplete"
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC2A67UwY9oFXk2SJPkTSFAxA2pYlQLmLY&libraries=places&callback=initAutocomplete"
         async defer></script>
 
-<script src="js/FirebaseUIJavascript.js"></script>
- <link type="text/css" rel="stylesheet" href="css/FirebaseUICSS.css" />
+
 	
 	
     <!-- Bootstrap core JavaScript -->
@@ -68,35 +67,28 @@
         
 	<div id="LoginDiv" class = "LoginDiv">
 	
-
+         
+		   
 	
 	</div>
   
  
  
-<div id="TermsAndCondition"  class = "TermsAndCondition">  
+<div id="TermsAndConditionAAA"  class = "TermsAndCondition">  
   
    
-<div class = "TermsAndConditionBox"> 
 
-<div class = "TermsAndConditionText"> 
-
-
- 
- </div> 
 
  <form method="get" action="https://www.accountkit.com/v1.0/basic/dialog/sms_login/">
   <input type="hidden" name="app_id" value="137145246916295">
-  <input type="hidden" name="redirect" value="https://ahimt.github.io/Hirekorodemo/PhoneVerified.html">
+  <input type="hidden" name="redirect" value="http://localhost/FinalWork/PhoneVerified.html">
   <input type="hidden" name="state" value="abcd">
   <input type="hidden"   name="country_code" value="+61">
   <input type="hidden" name="fbAppEventsEnabled" value=true>
   <button class="AgreeButton" type="submit">I Agree</button>
   </form>
 
- 
 
- </div>  
  
  
   
@@ -107,36 +99,32 @@
   
   
   
-  
-  
-  
-  
-  
-  
-  
-  
   	
 <script>
  
-	
+
+document.getElementById("TermsAndConditionAAA").style.width = "0px";
 
 var DisplayName;
 var Email;
 var PhotoURL;
 var UserID;
+var CurrentLocation;
 
-
+       
 firebase.auth().onAuthStateChanged(function(user) {
 
 if(user){
-    
-    
+
+   
+	
+            getLocation();  
 		    DisplayName = user.displayName;
             Email = user.email;
             PhotoURL = user.photoURL;
-            UserID = user.uid; 
-			
-			
+            UserID = user.uid; 		
+	    
+	  
 			document.getElementById("LoginDiv").style.width = "0px";
 			
 	firebase.firestore().collection("Users").doc(UserID).get().then(function(doc) {
@@ -144,20 +132,30 @@ if(user){
 	
 
       CreatingAllTheNavigation();
-	
+	  
 
     } else {
 	
-	   
-	    document.getElementById("TermsAndCondition").style.width = "100%";
+  
+	    document.getElementById("TermsAndConditionAAA").style.width = "100%";
+		 
           
     }
 	
 	});	
 	
  
-   
 
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+    } else {
+        firebase.auth().signOut().then(function() {});
+    }
+}
+function showPosition(position) {
+    CurrentLocation =  position.coords; 
+}
 
 
 
@@ -175,6 +173,17 @@ LoginButtonLoader();
 }
 
 });
+
+
+
+
+
+
+
+
+
+
+
 
 
 

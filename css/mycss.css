@@ -40,7 +40,16 @@ body{
   100% { transform: rotate(360deg); }
 }
 
-
+.MessageConfirmBox{
+	
+	position : absolute;
+    z-index: -1;
+	margin: auto;
+    width: 50%;
+    border: 3px solid green;
+    padding: 10px;
+	
+}
 
 .rotatorclass{
 	
@@ -220,7 +229,7 @@ div.Menu .CloseMenuButton{
 }
 
 .SearchBox{
-	transition : 0.05s;
+	transition : 1s;
 	overflow : hidden;
 	z-index : 1;
 	position : fixed;
@@ -233,7 +242,7 @@ div.Menu .CloseMenuButton{
 	box-shadow: 2px 2px 2px gray;
 	float : left;
 	padding-top : 5px;
-	margin-right : 5px;
+	margin-right : 7px;
 	font-size : large ;
     border-radius : 50%;
     background : yellow;
@@ -339,48 +348,12 @@ div.Menu .CloseMenuButton{
 	 
 }
  
-.TermsAndCondition{
-	 
-     position : absolute;
-	 top : 0;
-	 right : 0;
-	 overflow : hidden;
-	 height : 100%;
-	 width : 0px;
-	 transition : 0.4s;
-	 
-}
+
  
-.TermsAndConditionBox{
-	 
-	 
-	 position : relative;
-	 margin : 50px auto;
-	 height : 75%;	 
-	 width : 70%;
-	 max-width : 450px;
-	 
-}
+
  
-.TermsAndConditionText{
-	 
-	
-	 height : 70%;	 
-	 width : 100%;
-	 background : white;
-	 overflow-y : scroll;
-	 
-	 
-}
- 
- .AgreeButton{
-	 
-	
-	 margin-top : 25px;
-	 height : 35px;	 
-	 width : 100%;
-	 
- }
+
+
  
  
 .GreenTickMarkDiv{
@@ -1157,6 +1130,7 @@ div.Menu .CloseMenuButton{
 	padding : 5px 5px 5px 20px;	
 	overflow : hidden;
 	box-shadow: 2px 2px 2px gray;
+
 }
 
 .ReplyColumn{
@@ -1250,4 +1224,12 @@ div.Menu .CloseMenuButton{
 	font-size : x-large;
 	color : red;
 	font-weight: bolder;
+}
+
+
+
+.TermsAndCondition{
+	
+	overflow : hidden;
+	
 }

@@ -1,5 +1,4 @@
-
-
+var CountryCode = "+61";
 
  // Initialize Firebase
   var config = {
@@ -16,38 +15,53 @@
   
 function LoginButtonLoader(){
 	
+	var LoginDiv = document.getElementById("LoginDiv");
+	LoginDiv.innerHTML = " <button class='AgreeButton' onclick='GoogleLogin()' >Google</button> " + 
+	" <button  class='AgreeButton' onclick='FaceBookLogin()' >Facebook</button>";
 	
 	
 	
 	
 	
- // FirebaseUI config.
-      var uiConfig = {
-        signInSuccessUrl: 'index.html',
-        signInOptions: [
-          // Leave the lines as is for the providers you want to offer your users.
-           
-		  
-          firebase.auth.FacebookAuthProvider.PROVIDER_ID,
-          firebase.auth.GoogleAuthProvider.PROVIDER_ID		  
-         
-        ],
-        // Terms of service url.
-        tosUrl: '<your-tos-url>'
-      };
-
-      // Initialize the FirebaseUI Widget using Firebase.
-      var ui = new firebaseui.auth.AuthUI(firebase.auth());
-      // The start method will wait until the DOM is loaded.
-	  	
-
-      ui.start('#LoginDiv', uiConfig);
+}
 
 
+function GoogleLogin(){
 	
-	document.getElementById("LoginDiv").style.height = "auto";
+	var provider = new firebase.auth.GoogleAuthProvider();
+	
+	firebase.auth().signInWithRedirect(provider);
+	
+	firebase.auth().getRedirectResult().then(function(result) {
+		
+
+		
+}).catch(function(error) {
+ 
+ GoogleLogin();
+ 
+});
 	
 	
+}
+
+
+
+function FaceBookLogin(){
+	
+	var provider = new firebase.auth.FacebookAuthProvider();
+	
+	firebase.auth().signInWithRedirect(provider);
+	
+	firebase.auth().getRedirectResult().then(function(result) {
+		
+	
+		
+}).catch(function(error) {
+ 
+ FaceBookLogin();
+ 
+});
 	
 	
 }

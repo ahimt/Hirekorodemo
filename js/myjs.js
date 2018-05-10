@@ -1,6 +1,7 @@
 var MAIN_AD_IMAGE_MAX = 800;
 var CONTAINER_TRANSITION_SEC = 500;
-
+var NUMBER_OF_MAIN_CONTAINERS = 4;
+var VARIABLE_THAT_CONFIRMS_FIRST_RUN_DONE = false;
 
 
 var header;     // Header Div Element
@@ -17,6 +18,8 @@ var Menu;             // Creating the Menu Goes In Body
 var MenuContents;
 var SearchBox;
 var SearchBoxLOCKER;
+
+var MessageConfirmBox;
 
 var FilterSearch;
 var FilterPrice;
@@ -71,7 +74,7 @@ firebase.firestore().collection("Users").doc(AdObject.posterID).get().then(funct
 				
 					   var CommentCountRef = firebase.firestore().collection("MainAds").doc(AdObject.id).collection("CommentZone");  											
 	                   CommentCountRef.get().then(function(TWOquerySnapshot) {   
-					   Tempdata.comment = TWOquerySnapshot.docs.length + Tempdata.comment; // Getting Number of Comments
+					   Tempdata.comment = TWOquerySnapshot.docs.length ; // Getting Number of Comments
 					       
 					      MyAdOBJECTS.push(Tempdata); 
 						  AllAdsCreator(Tempdata,ContainerMyAds);							
@@ -130,12 +133,150 @@ firebase.firestore().collection("Users").doc(AdObject.posterID).get().then(funct
 }
 var LastSearchAdOBJECTS ;
 
-
-
 var LastAggrementAdPost;
 var LastAggrementOfferPost;
+var AggrementOfferOBJECTS = []; 
+function AggrementsColumnCreator(Aggrements , WasPreLoaded ){
+	
+	var AdObject;
+    var Comments = 0;
+    var Applications = 0;
+	var AdPoster;
+	var AdPosterImage;
+	var OfferInfo;
+	var OfferPoster;
+	var OfferPosterImage;	
+	var Offerer;	
+	var FirstUSER = {info : "" , proimage : ""};
+	var SecondUSER = {info : "" , proimage : ""};	
+	var price = "";
+	var priceText = price;	
+	
+
+     
+	
+    if(WasPreLoaded == true){
+	AdObject = Aggrements.AdObject;  Comments = Aggrements.Comments; Applications = Aggrements.Applications; AdPoster = Aggrements.AdPoster;
+	AdPosterImage = Aggrements.AdPosterImage;  OfferInfo = Aggrements.OfferInfo; OfferPoster = Aggrements.OfferPoster; OfferPosterImage = Aggrements.OfferPosterImage;
+	Offerer = Aggrements.Offerer;  FirstUSER = Aggrements.FirstUSER; SecondUSER = Aggrements.SecondUSER; 
+	DisplayAggrementColum();	
+		
+	}
+	else{
+  	
+    	 
+		
+    firebase.firestore().collection("MainAds").doc(Aggrements.id).get().then(function(ONEquerySnapshot) {
+	
+	AdObject = ONEquerySnapshot.data();
+	
+    firebase.firestore().collection("OfferZone").where("AdID", "==", AdObject.id).get().then(function(THREEdoc) {			                 
+				 
+         Applications = THREEdoc.docs.length; // Getting Number of Applications
+				   
+	firebase.firestore().collection("MainAds").doc(AdObject.id).collection("CommentZone").get().then(function(TWOquerySnapshot) {
+		
+         Comments = TWOquerySnapshot.docs.length ; // Getting Number of Comments
+						  						
+				
+						    	
+	firebase.firestore().collection("Users").doc(AdObject.posterID).get().then(function(AdUSERdoc) {
+		 
+	 
+	AdPoster = AdUSERdoc.data();  	
+    
+	 firebase.storage().ref('UserProPics/' + AdObject.posterID + '/Propic.png').getDownloadURL().then(function(url) {
+	 AdPosterImage = url;  
+	 
+	 firebase.firestore().collection("OfferZone").doc(Aggrements.offerID).get().then(function(OfferData) {
+	 OfferInfo = OfferData.data();
 
 
+	   
+	 firebase.firestore().collection("Users").doc(OfferInfo.offerposterID).get().then(function(OfferUser) {
+	 OfferPoster = OfferUser.data();
+
+
+
+
+	   
+	 firebase.storage().ref('UserProPics/' + OfferInfo.offerposterID + '/Propic.png').getDownloadURL().then(function(url) {
+	 OfferPosterImage = url;  
+	  
+	 price = OfferInfo.offerprice + " ৳  ";
+     priceText = price;	
+		
+	
+	if(UserID == AdPoster.uid){
+	   FirstUSER.info = AdPoster;
+	   FirstUSER.proimage = AdPosterImage;
+	   SecondUSER.info = OfferPoster;
+	   SecondUSER.proimage = OfferPosterImage;
+	   Offerer = SecondUSER;
+	   
+	}else{
+	   SecondUSER.info = AdPoster;
+	   SecondUSER.proimage = AdPosterImage;
+	   FirstUSER.info = OfferPoster;
+	   FirstUSER.proimage = OfferPosterImage;	
+       Offerer = FirstUSER;	   
+	}
+
+
+
+        DisplayAggrementColum();
+        		  
+	var ThisTempdata = { AdObject : AdObject, Comments : Comments , Applications : Applications , AdPoster : AdPoster , AdPosterImage : AdPosterImage , 
+	 OfferInfo : OfferInfo, OfferPoster : OfferPoster , OfferPosterImage : OfferPosterImage , Offerer : Offerer , FirstUSER : FirstUSER , SecondUSER : SecondUSER
+   , price : price  };  
+ 	 AggrementOfferOBJECTS.push(ThisTempdata);
+            
+     
+	   
+	
+	 	}); 
+	   
+	
+	 	});  
+					   
+		
+		});  
+					   
+		});
+					   
+		  
+					   
+	});
+
+	   });
+				 });
+
+      });
+	  
+	} // End of Else statement
+	  function DisplayAggrementColum(){
+		  
+  var Cover = document.createElement("DIV");
+  Cover.className = "Cover";
+  Cover.innerHTML = AdObject.id + "<br>" + OfferInfo.offerprice + "<br>" + SecondUSER.info.name 
+  + "<br> <img src="+ SecondUSER.proimage + " height='50' width='50'> " 
+   + "<p class ='DEStoTIME' hidden>" + OfferInfo.postedTime + " </p>"; 
+  Cover.onclick = function(){         
+		 
+	   var Tempdata = { mainadinfo : AdObject, posterinfo : AdPoster , userphotolink : AdPosterImage , comment : Comments , applications : Applications , postedTime : AdObject.updatedTime , imgurls : AdObject.imagename};
+       OffersByUserCreatorApplicationsFullViewer(OfferInfo,Tempdata,Offerer);
+   
+  }
+  
+  ContainerMyAggrements.appendChild(Cover);
+
+  SortingDivElmentsTimeASC(ContainerMyAggrements,"Cover");
+
+		  
+		  
+	  }
+	
+}
 
 
 function CreatingAllTheNavigation(){
@@ -269,7 +410,7 @@ var LogoBar = document.createElement("DIV");            // Creating the LogoBar 
 	MyActivityButton.onclick = function(){
 		MainMenuSwitcher("MyActivityButton");
 	}
-	MyActivityButton.innerHTML = "<div id = 'NaviIcon' class='fa fa-calendar-check-o'></div> <p class = 'NaviText' >My Activity</p>";
+	MyActivityButton.innerHTML = "<div id = 'NaviIcon' class='fa fa-calendar-check-o'></div> <p class = 'NaviText' >Activities</p>";
 	MenuContents.appendChild(MyActivityButton);
 	
 	/*
@@ -324,20 +465,24 @@ var LogoBar = document.createElement("DIV");            // Creating the LogoBar 
 	
 	Container = document.createElement("DIV");           
 	Container.className = "Container";
+	Container.id = "ContainerDisplay0";
 	ContainerCover.appendChild(Container);
 	
 	ContainerMyAds = document.createElement("DIV");           
 	ContainerMyAds.className = "Container";
+	ContainerMyAds.id = "ContainerDisplay1";
 	ContainerMyAds.style.display = "none";
 	ContainerCover.appendChild(ContainerMyAds);
 	
 	ContainerSearchAds = document.createElement("DIV");           
 	ContainerSearchAds.className = "Container";
+	ContainerSearchAds.id = "ContainerDisplay2";
 	ContainerSearchAds.style.display = "none";
 	ContainerCover.appendChild(ContainerSearchAds);
 	
 	ContainerMyAggrements = document.createElement("DIV");           
 	ContainerMyAggrements.className = "Container";
+	ContainerMyAggrements.id = "ContainerDisplay3";
 	ContainerMyAggrements.style.display = "none";
 	ContainerCover.appendChild(ContainerMyAggrements);
 	
@@ -358,6 +503,16 @@ var LogoBar = document.createElement("DIV");            // Creating the LogoBar 
 	SearchBoxCover.className = "ContainerH";
 	SearchBox.appendChild(SearchBoxCover);
 	
+	FilterLocation = document.createElement("DIV");
+	FilterLocation.className = "fa fa-map-marker";
+	FilterLocation.id = "FilterButtonID";
+	FilterLocation.onclick = function(){
+		
+		MapIconClickFunction();
+		
+	}
+	SearchBoxCover.appendChild(FilterLocation);
+	
 	FilterSearch = document.createElement("DIV");
 	FilterSearch.className = "fa fa-car";
 	FilterSearch.id = "FilterButtonID";
@@ -368,14 +523,13 @@ var LogoBar = document.createElement("DIV");            // Creating the LogoBar 
 	FilterPrice.id = "FilterButtonID";
 	SearchBoxCover.appendChild(FilterPrice);
 	
-	FilterLocation = document.createElement("DIV");
-	FilterLocation.className = "fa fa-car";
-	FilterLocation.id = "FilterButtonID";
-	SearchBoxCover.appendChild(FilterLocation);
+
 	
 	SearchBoxContainer = document.createElement("DIV");
 	SearchBoxContainer.className = "SearchBoxContainer";
 	SearchBoxCover.appendChild(SearchBoxContainer); 
+	
+
 	
 	var delay = 200;
     var timeout = null;
@@ -401,14 +555,21 @@ var LogoBar = document.createElement("DIV");            // Creating the LogoBar 
 	Modalcontent = document.createElement("IMG");
 	Modalcontent.className = "modal-content";
 	Modal.appendChild(Modalcontent);
+	
+	GetRealTimeSearchAllAds();
+	
+	setTimeout(function(){
+     VARIABLE_THAT_CONFIRMS_FIRST_RUN_DONE = true;
+    },1000); 
+	
   	   
 }
 
 function HeaderSearchOFF(){
-	if(SearchBoxLOCKER == true){SearchBox.style.height = "0px"; header.style.height = "0px"; header.style.overflow = "hidden"; }
+	if(SearchBoxLOCKER == true){SearchBox.style.height = "0px";  }
 }
 function HeaderSearchON(){
-	if(SearchBoxLOCKER == true){SearchBox.style.height = "35px"; header.style.height = "47px"; header.style.overflow = "visible"; }
+	if(SearchBoxLOCKER == true){SearchBox.style.height = "35px";  }
 }
 
 function GET_JobSearchNotification(){
@@ -432,6 +593,125 @@ function GET_JobSearchNotification(){
 }
 
 
+function MapIconClickFunction(){
+	
+	var ForCase = document.getElementById("PageTitleIcon").className;
+	
+	switch(ForCase){
+		
+		case "fa fa-search" : NearBySearchMapView();  break;
+		case "fa fa-map-marker" : MainMenuSwitcher("SearchJobsButton");  break;
+		default: alert("Nothing");  break;
+		
+		
+		
+	}
+	
+	
+}
+
+
+function NearBySearchMapView(){
+	
+	ChangeDisplayContainer("ContainerDisplay0");
+	
+	
+	var ForCase = document.getElementById("PageTitleIcon");
+	ForCase.className = "fa fa-map-marker";
+		
+	var MapByGoogle = document.createElement("DIV");
+	MapByGoogle.style.height = "380px";
+	MapByGoogle.style.width = "100%";
+	
+	Container.appendChild(MapByGoogle);
+	
+	 var MyICON = {
+      url: PhotoURL, // url
+      scaledSize: new google.maps.Size(30, 30)
+     };
+	
+	var map = new google.maps.Map(MapByGoogle, {
+      zoom: 13,
+      center: new google.maps.LatLng(CurrentLocation.latitude,CurrentLocation.longitude),
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+	
+    
+
+   // var infowindow = new google.maps.InfoWindow();
+
+    var marker , i;
+	
+	    marker = new google.maps.Marker({
+        position: map.center,
+		animation: google.maps.Animation.DROP,
+		icon : MyICON,
+        map: map
+      });
+
+       for (i = 0; i < SearchAdOBJECTS.length; i++) {  
+        marker = new google.maps.Marker({
+        position: new google.maps.LatLng(SearchAdOBJECTS[i].mainadinfo.geopoints.latitude,SearchAdOBJECTS[i].mainadinfo.geopoints.longitude),
+		animation: google.maps.Animation.DROP,
+        map: map
+      });
+
+        google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+			
+			alert(SearchAdOBJECTS[i].mainadinfo.title);
+			
+       
+        }
+      })(marker, i));
+    }
+	
+
+	
+	
+	
+}
+
+
+function ChangeDisplayContainer(ContainerThisID){
+	
+	
+	for(var count = 0; count < NUMBER_OF_MAIN_CONTAINERS ; count ++){
+		
+
+
+ 		if(ContainerThisID[ContainerThisID.length - 1] == count){
+             
+             var ThisElement = document.getElementById(ContainerThisID);
+             ThisElement.innerHTML = "";	  
+             ThisElement.style.display = "block";  
+             ThisElement.scrollTop = 0;  
+
+
+		}
+        else if(ContainerThisID == "All"){
+             
+             var ThisElement = document.getElementById("ContainerDisplay" + count);
+             ThisElement.innerHTML = "";	  
+             ThisElement.style.display = "none";  
+
+        } 
+		else{
+
+             var ThisElement = document.getElementById("ContainerDisplay" + count); 
+             ThisElement.style.display = "none";  
+			
+		}
+		
+		
+	}
+	
+	
+	
+}
+
+
+
 function GET_ApplicationsNotification(){
 	
 	var GET_Application = firebase.firestore().collection("OfferZone").where("AdposterID", "==", UserID); 
@@ -451,15 +731,7 @@ function GET_ApplicationsNotification(){
 function MainMenuSwitcher(MenuString){
 	
 	
-	Container.style.display = "none";
-	ContainerMyAds.style.display = "none";
-	ContainerSearchAds.style.display = "none";
-	ContainerMyAggrements.style.display = "none";	
-	
-	Container.innerHTML = "";
-	ContainerMyAds.innerHTML = "";
-	ContainerSearchAds.innerHTML = "";
-	ContainerMyAggrements.innerHTML = "";
+	ChangeDisplayContainer("All");
 	
 	SearchBoxLOCKER = false;	
 	if(SearchBox != null){SearchBox.style.height = "0px";}
@@ -467,10 +739,8 @@ function MainMenuSwitcher(MenuString){
 	Menu.style.width = "0px";
 	Menu.style.boxShadow = "none";
 	MenuContents.scrollTop = 0;
-	LoaderSpinnerAnimation();
 	
 	PageStateChangerWithPageTITLE(MenuString);
-    Container.scrollTop = 0;
 	
 	switch(MenuString){		
 
@@ -479,8 +749,8 @@ function MainMenuSwitcher(MenuString){
 	case "MyAdsButton"         :     GenerateOnlyMyAds();       SearchBoxLOCKER = true;           break;
 	case "SearchJobsButton"    :     GenerateSearchAllAds();    SearchBoxLOCKER = true;  JobSearchNotification.style.visibility = "hidden"; break;
 	case "AggreementButton"    :     GenerateAllAggrements();        break;
-	case "JobRequestsButton" :  break;
-	case "MyProfileButton" :  break;
+	case "JobRequestsButton"   :                                                                  break;
+	case "MyProfileButton"     :     ProfileViewer(UserID);                                       break;
 	case "DashboardButton" :  break;
 	case "MyActivityButton" :  break;
 	case "FeedbacksButton" :  break;
@@ -508,7 +778,7 @@ function PageStateChangerWithPageTITLE(MenuString){
 	case "PostAJobButton"     : PageTitleDiv.innerHTML = ""; PageTitleDiv.innerHTML = "<div id = 'PageTitleIcon' class='fa fa-edit'></div>";            SearchBoxLOCKER = false; break;
 	case "MyAdsButton"        : PageTitleDiv.innerHTML = ""; PageTitleDiv.innerHTML = "<div id = 'PageTitleIcon' class='fa fa-newspaper-o'></div>";     SearchBoxLOCKER = true; break;
 	case "SearchJobsButton"   : PageTitleDiv.innerHTML = ""; PageTitleDiv.innerHTML = "<div id = 'PageTitleIcon' class='fa fa-search'></div>";          SearchBoxLOCKER = true; break;
-	case "MessagesButton"     : PageTitleDiv.innerHTML = ""; PageTitleDiv.innerHTML = "<div id = 'PageTitleIcon' class='fa fa-envelope'></div>";        SearchBoxLOCKER = false; break;
+	case "AggreementButton"     : PageTitleDiv.innerHTML = ""; PageTitleDiv.innerHTML = "<div id = 'PageTitleIcon' class='fa fa-handshake-o'></div>";        SearchBoxLOCKER = false; break;
 	case "JobRequestsButton"  : PageTitleDiv.innerHTML = ""; PageTitleDiv.innerHTML = "<div id = 'PageTitleIcon' class='fa fa-question-circle'></div>"; SearchBoxLOCKER = false; break;
 	case "MyProfileButton"    : PageTitleDiv.innerHTML = ""; PageTitleDiv.innerHTML = "<div id = 'PageTitleIcon' class='fa fa-user'></div>";            SearchBoxLOCKER = false; break;
 	case "DashboardButton"    : PageTitleDiv.innerHTML = ""; PageTitleDiv.innerHTML = "<div id = 'PageTitleIcon' class='fa fa-briefcase'></div>";       SearchBoxLOCKER = false; break;
@@ -525,11 +795,7 @@ function PageStateChangerWithPageTITLE(MenuString){
 function PostAJobButtonGenerate(){
 	
 	
-	Container.innerHTML = "";	
-	Container.style.display = "block";
-	ContainerMyAds.style.display = "none";
-	ContainerSearchAds.style.display = "none";
-	ContainerMyAggrements.style.display = "none";
+	ChangeDisplayContainer("ContainerDisplay0");
 	
   setTimeout(function () { 
   
@@ -610,8 +876,7 @@ function PostAJobButtonGenerate(){
 
 function JobPostingFormCreator(titleEx){
 	
-	Container.innerHTML = "";
-	Container.scrollTop = 0;
+	ChangeDisplayContainer("ContainerDisplay0");
 		
 	setTimeout(function(){	
 	
@@ -623,7 +888,7 @@ function JobPostingFormCreator(titleEx){
 	var minDate = AddDaysWithCurrentDate(5);
 	var maxDate = AddDaysWithCurrentDate(100);
 	
-	var AdTemplate = { id:"" ,title:"", description:"", address:"" , duedate:"" ,budget:"" , imgurls : "" };
+	var AdTemplate = { id:"" ,title:"", description:"", address:"" , duedate:"" ,budget:"" , imgurls : "" , geopoint : null };
     AdTemplate.imgurls = new Array();
 
 	
@@ -925,6 +1190,26 @@ function JobPostingFormCreator(titleEx){
 	
     Container.appendChild(LocationInvisDiv);
 	
+	
+
+    
+		 
+     AdTemplate.geopoint = new firebase.firestore.GeoPoint(CurrentLocation.latitude,CurrentLocation.longitude);
+	        
+			$.getJSON('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + CurrentLocation.latitude + ',' 
+			+ CurrentLocation.longitude
+			+ '&key=AIzaSyC2A67UwY9oFXk2SJPkTSFAxA2pYlQLmLY' ,function (data)
+           {  
+                LocationInputElement.value = data.results[0].formatted_address;	
+				LocationInputElement.disabled = true;
+                LocationTickIcon.className="fa fa-check-square-o";
+		        LocationTickIcon.style.color = "#33cc33";  			   
+      
+           },'jsonp');
+	 
+	 
+	
+	
 	    }, CONTAINER_TRANSITION_SEC);
 	
 }
@@ -932,12 +1217,7 @@ function JobPostingFormCreator(titleEx){
 
 function UPDATEJobPostingFormCreator(AdObject){
 	
-	Container.innerHTML = "";
-	Container.style.display = "block";
-	ContainerMyAds.style.display = "none";
-	ContainerSearchAds.style.display = "none";
-	ContainerMyAggrements.style.display = "none";
-	Container.scrollTop = 0;
+	ChangeDisplayContainer("ContainerDisplay0");
 
 	SearchBoxLOCKER = false;	
 	if(SearchBox != null){SearchBox.style.height = "0px";}
@@ -1137,8 +1417,8 @@ function UPDATEJobPostingFormCreator(AdObject){
 	DescriptionTickIcon.style.color = "#33cc33";
 	BudgetTickIcon.className="fa fa-check-square-o";
 	BudgetTickIcon.style.color = "#33cc33";
-
-
+	
+  
 		
 	 }, CONTAINER_TRANSITION_SEC);
 		
@@ -1243,7 +1523,7 @@ if (titleValue == "" || titleValue == null) {
 }
 
 
-function LocationValidator(GetInput, tickmark){
+function LocationValidator(GetInput, tickmark){        // not used
 	
    var 	Country = document.getElementById("country").value;	
    var 	Division = document.getElementById("administrative_area_level_1").value;
@@ -1319,7 +1599,7 @@ if(titleValue >= MinPrice && titleValue <= 5000){
 
 function PostItButtonGreen(TickIcons,Postit,AdData){
 	
-	LocationValidator(AdData.address.value, TickIcons[2]);
+	//LocationValidator(AdData.address.value, TickIcons[2]);
 	
 	
 	
@@ -1392,11 +1672,6 @@ function initAutocomplete(ID) {
             {'country': ['bd']});
   
 
-       
- 
-  
-  
-  
   
 }
 
@@ -1465,40 +1740,53 @@ function RegisterUser(UserID,displayName,Phone,Email,PhotoURL){
 	firebase.firestore().collection("Users").doc(UserID).get().then(function(doc) {
                     if (doc.exists) {
                            
-						   window.location.replace("MainPage.html");
+						  location.replace("index.html");
 						   
                      } else {
 	                
 	                       firebase.firestore().collection("Users").doc(UserID).set({
 		                   
 						    uid : UserID , 
+							description : "",
 		                    name: displayName,
-							regitime : new Date()
+							regitime : new Date(), 
+							lastonlinetime : new Date(), 
+							phone : Phone , 
+		                    email: Email
 		
 		
 	                        }).then(function(){
                             								
-							SaveProfileImageForUser(PhotoURL);   // Saving ProImage to Database
-							firebase.firestore().collection("Users").doc(UserID).collection("Private").doc(UserID).set({
-		                   
-						    phone : Phone , 
-		                    email: Email
-		
-		
-	                        }).then(function(){	
-							
-							LoaderSpinnerRemover();
-							ConfirmAnimation();
-							    
-								setTimeout(function(){
-	                             
-								 
-					             window.location.replace("MainPage.html");
+						
+		                      fetch(PhotoURL)
+                              .then(res => res.blob()) // Gets the response and returns it as a blob
+                              .then(blob => {
+               
+			 
+		 
+			
+		  var SaveProfilestoRef = firebase.storage().ref("UserProPics/" + UserID + "/Propic.png");		
+				 
+	             SaveProfilestoRef.put(blob).then(function(snapshot) {
 					 
-                               }, 2500);
+					 
+					    }).then(function(){
+							
+					        ConfirmAnimation();
+							setTimeout(function(){
+									 location.replace("index.html");
+					 
+                            }, 4100);
+					 
+				       });
+	
+           });
+						   
+	                        
+							
 							
 								
-					      });
+					   
 							
 							
 					      });
@@ -1506,6 +1794,9 @@ function RegisterUser(UserID,displayName,Phone,Email,PhotoURL){
                      }
 	
 	          });
+	
+	
+	
 	
 	
 	
@@ -1538,6 +1829,8 @@ function ConfirmAnimation(){
 
 
 function LoaderSpinnerAnimation(){
+	
+	return;
 
  var Loader = document.createElement("DIV");
      Loader.className = "loader";
@@ -1548,8 +1841,9 @@ function LoaderSpinnerAnimation(){
 
 
 function LoaderSpinnerRemover(){
-	
+	return;
 	var Loader = document.getElementById("Loader");
+	if(Loader == null){ return;}
 	document.body.removeChild(Loader); 
    
 	
@@ -1600,6 +1894,9 @@ function SaveMainAds(AdTemplate , AdsState , Postit){
 	var ImageNames = [];
 	var Description = AdTemplate.description;
 	var localAdress =  AdTemplate.address.value;
+	var Geopoint = AdTemplate.geopoint;
+
+	
 	var DueDate = new Date(AdTemplate.duedate);
 	var Budget =  Number(AdTemplate.budget) ;
 	var NewDate =  new Date();	
@@ -1637,6 +1934,7 @@ function SaveMainAds(AdTemplate , AdsState , Postit){
 							updatedTime : NewDate,
 							description : Description,
 							address : localAdress,
+							geopoints : Geopoint,
 							duedate : DueDate,
 							budget : Budget,
 							state : AdsState
@@ -1649,6 +1947,20 @@ function SaveMainAds(AdTemplate , AdsState , Postit){
 						             SaveMainAdImages(AdTemplate.imgurls[count],TemplateID, ImageNames[count]);
 								     }
 							  } 
+							  
+							  var NewID = GenerateNewIDfromDatabase();
+							  
+							  firebase.firestore().doc("Activity/" + NewID).set({
+		                      
+							 id : NewID,
+							 AdID : TemplateID,
+							 posterID : UserID,
+							 activitytype : "Adpost",
+							 postedTime : NewDate
+							 
+	                         }); 
+							  
+							  
 							 ConfirmAnimation();
 							 MyAdOBJECTS = [];
 							  setTimeout(function(){								   
@@ -1656,6 +1968,11 @@ function SaveMainAds(AdTemplate , AdsState , Postit){
                               }, 1950);
 							
 						}); 
+						
+						
+						
+    
+	
 		
 		
 }
@@ -1665,11 +1982,7 @@ function SaveMainAds(AdTemplate , AdsState , Postit){
 	
 function GenerateOnlyMyAds(){	
 	
-	ContainerMyAds.innerHTML = "";
-	Container.style.display = "none";
-	ContainerMyAds.style.display = "block";
-	ContainerSearchAds.style.display = "none";
-	ContainerMyAds.scrollTop = 0; 
+	ChangeDisplayContainer("ContainerDisplay1");
 	SearchBox.style.height = "35px";
 
   setTimeout(function () {     
@@ -1694,6 +2007,16 @@ function GenerateOnlyMyAds(){
     
     var OnlyMyAdsRef = firestore.orderBy("updatedTime", "desc").limit(DataLengthLimit); 
 	OnlyMyAdsRef.get().then(function(ONEquerySnapshot) {
+		
+		 if(ONEquerySnapshot.docs.length == 0){
+
+        var DisPlayNull = document.createElement("DIV");	
+        DisPlayNull.innerHTML = "Nothings here...";
+        ContainerMyAds.appendChild(DisPlayNull);  	
+        return;
+      
+
+        }
 	 
 		 LastAdOBJECTS = ONEquerySnapshot.docs[ONEquerySnapshot.docs.length-1];
 		 setTimeout(function () {  LoaderSpinnerRemover(); }, 5000);
@@ -1755,14 +2078,34 @@ function GenerateOnlyMyAds(){
 
 
 
+function GetRealTimeSearchAllAds(){
+	
+	
+	var DataLengthLimit = 1;
+	var firestore = firebase.firestore().collection("MainAds").orderBy("updatedTime", "desc").limit(DataLengthLimit); 
+	firestore.onSnapshot(function(ONEquerySnapshot) {
+		
+		var First_run_complete = VARIABLE_THAT_CONFIRMS_FIRST_RUN_DONE;
+		ONEquerySnapshot.forEach(function(ONEdoc) {
+
+       
+	    if(First_run_complete == true){ SaveSearchAdOBJECTS(ONEdoc.data());}
+         console.log("Realtime");
+   
+	
+		});
+		
+		
+
+	});
+	
+	
+}
+
 	
 function GenerateSearchAllAds(){
 
-    ContainerSearchAds.innerHTML = "";
-	Container.style.display = "none";
-	ContainerMyAds.style.display = "none";
-	ContainerSearchAds.style.display = "block";
-	ContainerSearchAds.scrollTop = 0; 
+    ChangeDisplayContainer("ContainerDisplay2");
 	SearchBox.style.height = "35px";
 
   setTimeout(function () {     
@@ -1791,6 +2134,17 @@ function GenerateSearchAllAds(){
   		
     var OnlyMyAdsRef = firestore.orderBy("updatedTime", "desc").limit(DataLengthLimit); 
 	OnlyMyAdsRef.get().then(function(ONEquerySnapshot) {
+		
+		
+		if(ONEquerySnapshot.docs.length == 0){
+
+        var DisPlayNull = document.createElement("DIV");	
+        DisPlayNull.innerHTML = "Nothings here...";
+        ContainerSearchAds.appendChild(DisPlayNull);  	
+        return;
+      
+
+        }
 	
   
 	LastSearchAdOBJECTS = ONEquerySnapshot.docs[ONEquerySnapshot.docs.length - 1];
@@ -2007,19 +2361,13 @@ function AllAdsCreator(AdObject,conn){
 function SearchAdsFullViewCreator(AdObject){
 	
    LoaderSpinnerAnimation();	
-   ContainerSearchAds.style.display = "none";
-   ContainerMyAds.style.display = "none";
-   Container.innerHTML = "";
+   ChangeDisplayContainer("ContainerDisplay0");
    
    SearchBoxLOCKER = false;	
    if(SearchBox != null){SearchBox.style.height = "0px";}
    
    
-  setTimeout(function () {     
-	Container.style.display = "block";
-	LoaderSpinnerRemover();	
-	Container.scrollTop = 0;
-  }, CONTAINER_TRANSITION_SEC);	
+
 	
 	
 	var AdID = AdObject.mainadinfo.id;
@@ -2090,7 +2438,7 @@ function SearchAdsFullViewCreator(AdObject){
     AllAdsImage.src = PosterImageSrc;	
 	AllAdsImage.onclick = function(){
 		
-		alert("PosterImage Pressed");
+		ProfileViewer(AdObject.posterinfo.uid);
 	}
 	
 	AllAdsImageFrame.appendChild(AllAdsImage);
@@ -2104,8 +2452,10 @@ function SearchAdsFullViewCreator(AdObject){
 	var PosterNameElement = document.createElement("P");
 	PosterNameElement.className = "PosterName";	
 	PosterNameElement.innerHTML = PosterName;
-	PosterNameElement.onclick = function(){
-		alert("Profile Viewer");
+	PosterNameElement.onclick = function(){		
+		
+	ProfileViewer(AdObject.posterinfo.uid);
+	
 	}
 	
 	SearchAdsInfoCalumrightSide.appendChild(PosterNameElement);
@@ -2118,7 +2468,38 @@ function SearchAdsFullViewCreator(AdObject){
 	+ "  Comments</td> </tr>  <tr>  <td id = 'FullViewClockMarker' class='fa fa-address-card' ></td> <td>  " + AdObject.applications 
 	+ " Applications</td></tr> </table>";
 	
-	SearchAdsFullViewContainer.appendChild(SearchAdsInfoCalum2);	
+	SearchAdsFullViewContainer.appendChild(SearchAdsInfoCalum2);
+	
+
+	
+	var MapByGoogle = document.createElement("DIV");
+	MapByGoogle.style.height = "200px";
+	MapByGoogle.style.width = "100%";
+	
+	var ICONcon = {
+    url: PosterImageSrc, // url
+    scaledSize: new google.maps.Size(30, 30)
+    };
+	
+	var mapProp= {
+    center:new google.maps.LatLng(AdObject.mainadinfo.geopoints.latitude,AdObject.mainadinfo.geopoints.longitude),
+    zoom:12,
+    };
+	var map=new google.maps.Map(MapByGoogle,mapProp);
+	var marker = new google.maps.Marker({
+    position: mapProp.center,
+	animation: google.maps.Animation.DROP,
+	icon: ICONcon
+    });
+
+
+
+    marker.setMap(map);
+	SearchAdsFullViewContainer.appendChild(MapByGoogle);
+ 
+  
+     
+
 	
 	var SearchAdsFullViewPriceTag = document.createElement("DIV");
 	SearchAdsFullViewPriceTag.className = "SearchAdsFullViewPriceTag";
@@ -2428,7 +2809,24 @@ function QuestionSaverDataBase(QuesObj , CommentZone , AdObject ){
 							postedTime : new Date()
 		
 		
-	                        }).catch(function(error) {	
+	                        }).then(function(){
+								
+								
+						     var NewID = GenerateNewIDfromDatabase();
+							  
+							  firebase.firestore().doc("Activity/" + NewID).set({
+		                      
+							 id : NewID,
+							 AdID : AdObject.mainadinfo.id,
+							 posterID : AdObject.posterinfo.uid,
+							 commentPosterID : UserID,
+							 activitytype : "CommentPost",
+							 postedTime : new Date()
+							 
+	                         }); 
+								
+								
+							}).catch(function(error) {	
 	                        
 							alert("Something went wrong");
 		
@@ -2465,6 +2863,12 @@ function QuestionAskCreator (Zone , QuesObj , AdObject){
 	var AllAdsImage = document.createElement("IMG");
 	AllAdsImage. className = "AllAdsImage";		
 	AllAdsImage.src = url;
+	AllAdsImage.onclick = function(){		
+		
+	ProfileViewer(QuesObj.qposterID);
+		
+	}
+	
 	AllAdsImageFrame.appendChild(AllAdsImage);	
 	
 	var rightSideComment = document.createElement("DIV");
@@ -2474,6 +2878,11 @@ function QuestionAskCreator (Zone , QuesObj , AdObject){
 	var PosterName = document.createElement("DIV");
 	PosterName. className = "PosterName";
     PosterName.innerHTML = NameSplitter(USERdoc.data().name);
+    PosterName.onclick = function(){		
+		
+	ProfileViewer(QuesObj.qposterID);
+		
+	}
 	rightSideComment.appendChild(PosterName);
 	
 	var reportIcon = document.createElement("DIV");
@@ -2587,18 +2996,16 @@ function CheckIfUserSubmittedOffer(AdObject){
  function OfferSubmissionForm(AdObject){
 	 
    LoaderSpinnerAnimation();	
-   ContainerSearchAds.style.display = "none";
-   ContainerMyAds.style.display = "none";
-   Container.innerHTML = "";
+   ChangeDisplayContainer("ContainerDisplay0");
    
    SearchBoxLOCKER = false;	
    if(SearchBox != null){SearchBox.style.height = "0px";}
    
   setTimeout(function () {
 	  
-	Container.style.display = "block"; 
+
 	LoaderSpinnerRemover();	
-	Container.scrollTop = 0;
+	
 	 
 	var AdId = AdObject.mainadinfo.id;
     var MinPrice = AdObject.mainadinfo.budget;
@@ -2732,7 +3139,20 @@ function SaveTheOfferOnMainAds(AdObject , OfferDes , OfferPrice , OfferButton){
 							AdposterID : AdObject.posterinfo.uid
 		
 		
-	                        }).then(function(){	
+	                        }).then(function(){
+
+                         var NewID = GenerateNewIDfromDatabase();
+							  
+							  firebase.firestore().doc("Activity/" + NewID).set({
+		                      
+							 id : NewID,
+							 AdID : AdObject.mainadinfo.id,
+							 posterID : AdObject.posterinfo.uid,
+							 offerPosterID : UserID,
+							 activitytype : "OfferPost",
+							 postedTime : new Date()
+							 
+	                         }); 							
 							
 							ConfirmAnimation();
 							 
@@ -2839,38 +3259,113 @@ function SaveTheOfferOnMainAds(AdObject , OfferDes , OfferPrice , OfferButton){
 }
 
  
+
+
+
+function SortingDivElmentsTimeASC(MainContainer,NameClass){
+	
+	
+    var GetColums = MainContainer.getElementsByClassName(NameClass);
+	var GetDEStoTIMEColums = []; 
+       
+	for(var count = 0; count < GetColums.length ; count++){
+		var x = GetColums[count];
+	    GetDEStoTIMEColums.push(x);
+	}
+       
+    var sorted = GetDEStoTIMEColums.sort(function(a,b){ a = new Date(a.getElementsByClassName("DEStoTIME")[0].innerHTML);  b = new Date(b.getElementsByClassName("DEStoTIME")[0].innerHTML); return a - b ; } ); 
+    
+	MainContainer.innerHTML = "";
+    for( var i = 0; i < sorted.length; ++i ) {
+			
+		MainContainer.appendChild(sorted[i]);
+		
+    }
+       
+	
+	
+}
+
+
+
+function ProfileViewer(ProfileID){
+	
+	var proUserDoc
+	var proUserImage;
+	
+	 ChangeDisplayContainer("ContainerDisplay0");
+	SearchBoxLOCKER = false;	
+    if(SearchBox != null){SearchBox.style.height = "0px";}
+	
+	 firebase.firestore().collection("Users").doc(ProfileID).get().then(function(ONEquerySnapshot) {
+	  proUserDoc = ONEquerySnapshot.data();
+	  
+	   firebase.storage().ref('UserProPics/' + ProfileID + '/Propic.png').getDownloadURL().then(function(url) {
+	   proUserImage = url;  
+	  
+	  var MyAggreemts = document.createElement("DIV");
+	MyAggreemts.className = "MyAggrementsColumn";
+	MyAggreemts.style.height = "auto";
+	MyAggreemts.style.fontSize = "auto";
+    MyAggreemts.innerHTML = proUserDoc.uid + "<br>" + proUserDoc.name + "<br>"; 
+
+    var ProfileImage =  document.createElement("IMG");
+    ProfileImage.src = proUserImage;
+    MyAggreemts.appendChild(ProfileImage);
+	 
+	 Container.appendChild(MyAggreemts);
+	 
+	     if(ProfileID == proUserDoc.uid){
+			 
+			 alert("This is Your Account");
+			 
+		 }
+
+      });	
+	  
+	 
+
+      });	 
+	
+}
+
+
 function OffersByUserCreatorApplications(OfferZone,OfferOject,AdObject){
 
 
 var AcceptButton = "";  
 
+var OfferPosterUSER = {info : null , proimage : null};
 
-var OfferObj = { offerinfo : OfferOject , posterinfo : null , mainadinfo : AdObject , userphotolink : null , postedTime : OfferOject.postedTime };
- 
-var adtimeleft = DateDiffFunction(OfferObj.mainadinfo.duedate , new Date());
 
-    if(UserID == AdObject.posterinfo.uid && adtimeleft != "A few seconds"){
+var adtimeleft = DateDiffFunction(AdObject.mainadinfo.duedate , new Date());
+
+    if(UserID == AdObject.posterinfo.uid){
+		if(adtimeleft == "A few seconds"){ return; }
+	   if(AdObject.mainadinfo.state == "online"){
 	   AcceptButton = "<button class = 'InfoSideAggrementsAcceptButton'> Accept </button>";
-	   function CoverOnclick(){ OffersByUserCreatorApplicationsFullViewer(OfferObj);}
+	    }
+		
+	   function CoverOnclick(){ OffersByUserCreatorApplicationsFullViewer(OfferOject,AdObject,OfferPosterUSER);}
 	} 
 	
 firebase.firestore().collection("Users").doc(OfferOject.offerposterID).get().then(function(USERdoc) {
-	 OfferObj.posterinfo = USERdoc.data();
+	 OfferPosterUSER.info = USERdoc.data();
     	
 	 firebase.storage().ref('UserProPics/' + USERdoc.id + '/Propic.png').getDownloadURL().then(function(url) {
-	 OfferObj.userphotolink = url;  
+	 OfferPosterUSER.proimage = url;  
            
-	var OfferID = OfferObj.offerinfo.id ;  
-	var UserName = OfferObj.posterinfo.name;
-	var price = OfferObj.offerinfo.offerprice + " ৳  ";
+	var OfferID = OfferPosterUSER.info.uid ;  
+	var UserName = OfferPosterUSER.info.name;
+	var price = OfferOject.offerprice + " ৳  ";
 	var priceText = price;
-	var ProImage = OfferObj.userphotolink; 
+	var ProImage = OfferPosterUSER.proimage; 
 	
 	UserName = NameSplitter(UserName);
 	
 	var Cover = document.createElement("DIV");	
 	Cover.className = "Cover";
-	Cover.innerHTML = "<p class ='DEStoTIME' hidden>" + OfferObj.offerinfo.postedTime + " </p>";
+	Cover.innerHTML = "<p class ='DEStoTIME' hidden>" + OfferOject.postedTime + " </p>";
 	
 	OfferZone.appendChild(Cover);
 					
@@ -2914,71 +3409,122 @@ firebase.firestore().collection("Users").doc(OfferOject.offerposterID).get().the
 
 
 
-function SortingDivElmentsTimeASC(MainContainer,NameClass){
-	
-	
-    var GetColums = MainContainer.getElementsByClassName(NameClass);
-	var GetDEStoTIMEColums = []; 
-       
-	for(var count = 0; count < GetColums.length ; count++){
-		var x = GetColums[count];
-	    GetDEStoTIMEColums.push(x);
-	}
-       
-    var sorted = GetDEStoTIMEColums.sort(function(a,b){ a = new Date(a.getElementsByClassName("DEStoTIME")[0].innerHTML);  b = new Date(b.getElementsByClassName("DEStoTIME")[0].innerHTML); return a - b ; } ); 
-    
-	MainContainer.innerHTML = "";
-    for( var i = 0; i < sorted.length; ++i ) {
-			
-		MainContainer.appendChild(sorted[i]);
+
+ function OffersByUserCreatorApplicationsFullViewer(OfferOject,AdObject,OfferPosterUSER){	
+
+    var FirstUSER = {info : null , proimage : null};
+	var SecondUSER = {info : null , proimage : null};
+ 
+    if(UserID == AdObject.posterinfo.uid){
+		FirstUSER.info = AdObject.posterinfo;
+		FirstUSER.proimage = AdObject.userphotolink;
+		SecondUSER.info = OfferPosterUSER.info;
+		SecondUSER.proimage = OfferPosterUSER.proimage;
 		
-    }
-       
-	
-	
-}
-
- function OffersByUserCreatorApplicationsFullViewer(OfferObj){	
-
-    ContainerApplications.innerHTML = "";
-	Container.style.display = "none";
-	ContainerMyAds.style.display = "none";
-	ContainerSearchAds.style.display = "none";
-	ContainerApplications.style.display = "block";
-	ContainerApplications.scrollTop = 0; 
+	}
+	else{
+		
+		SecondUSER.info = AdObject.posterinfo;
+		SecondUSER.proimage = AdObject.userphotolink;
+		FirstUSER.info = OfferPosterUSER.info;
+		FirstUSER.proimage = OfferPosterUSER.proimage;
+		
+		
+	}	
+ 
+    ChangeDisplayContainer("ContainerDisplay0");
 	SearchBoxLOCKER = false;	
     if(SearchBox != null){SearchBox.style.height = "0px";}
-                                   
-	var OfferID = OfferObj.offerinfo.id ;  
-	var UserName = OfferObj.posterinfo.name;
-	var price = OfferObj.offerinfo.offerprice + " ৳  ";
-	var priceText = price;
-	var ProImage = OfferObj.userphotolink; 
+	
+   
 					
 	var MyAggreemts = document.createElement("DIV");
 	MyAggreemts.className = "MyAggrementsColumn";
 	MyAggreemts.style.height = "auto";
 	MyAggreemts.style.fontSize = "auto";
-	MyAggreemts.id = OfferID;
-		
-	ContainerApplications.appendChild(MyAggreemts);
+    MyAggreemts.innerHTML = OfferOject.id + "<br>" + OfferOject.offerprice + "<br>" + SecondUSER.info.name + "<br>"
+    + OfferOject.postedTime; 
+
+    var ButtonTitle =  document.createElement("DIV");
+    ButtonTitle.innerHTML = AdObject.mainadinfo.title;
+    ButtonTitle.onclick = function(){
+         SearchAdsFullViewCreator(AdObject);
+    }
+    MyAggreemts.appendChild(ButtonTitle);
 	
-	var ImageSideAggrements = document.createElement("DIV");
-	ImageSideAggrements.className = "ImageSideAggrements";
-	ImageSideAggrements.innerHTML = " <div class = 'AllAdsImageFrame'>  <img class= 'AllAdsImage' src= " + ProImage+ ">  </div>";
+	firebase.firestore().collection("Agreements").doc(AdObject.mainadinfo.id).get().then(function(querySnapshot) {  
+	if (querySnapshot.exists) {		
+	  
+      AggrementExistFunction();
+
+	  }
+	else{
 		
-	MyAggreemts.appendChild(ImageSideAggrements);
-	
-	var InfoSideAggrements = document.createElement("DIV");
-	InfoSideAggrements.className = "InfoSideAggrements";
-	InfoSideAggrements.innerHTML = " <div class = 'PosterName' >" + UserName + "  </div> <div style = 'font-style: italic' ><i style='font-size:large;font-weight:bold;color:#00cc00'>" + priceText + "</i> for this Job </div>";
 		
-	MyAggreemts.appendChild(InfoSideAggrements);	
+	           var OfferDesTitleTEXT = document.createElement("P");
+	           OfferDesTitleTEXT.className = "SearchAdsFullViewDESCRIPTIONText";
+	           OfferDesTitleTEXT.style.padding = "10px 10px 10px 10px";
+	           OfferDesTitleTEXT.innerHTML = OfferOject.offerDescription;
 	
-	firebase.firestore().collection("Agreements").doc(OfferObj.mainadinfo.mainadinfo.id).get().then(function(querySnapshot) {
-		if (querySnapshot.exists) {
-			
-			   var AggEnds = document.createElement("P");
+	           MyAggreemts.appendChild(OfferDesTitleTEXT);
+	
+	           var AggreementDesBox = document.createElement("DIV");
+	           AggreementDesBox.className = "AggreementDesBox";
+	           AggreementDesBox.innerHTML = "<p class =  'LegalInfoTitle' >Legal Information</p> " + "<p class =  'LegalInfo' >It Starts with u</p> ";
+	
+	           MyAggreemts.appendChild(AggreementDesBox);
+			   
+		
+		
+	var AcceptButton =  document.createElement("BUTTON");
+    AcceptButton.innerHTML = "Accept Offer";
+    AcceptButton.onclick = function(){
+          var x = confirm("This is it!");
+  
+	    if(x == true){
+		   
+		       AgreementSaver(OfferOject);    
+			  
+		   
+	     }else{
+		alert(false);
+	     }
+       }
+       MyAggreemts.appendChild(AcceptButton);
+		
+		
+		
+	}
+	
+	});
+	
+	
+		
+   
+	
+	
+    function AggrementExistFunction(){
+		
+		
+	
+		
+	
+    var CallNowButton =  document.createElement("A");
+    CallNowButton.href = "tel:" + SecondUSER.phone;
+    CallNowButton.innerHTML = "Call Phone <br>";
+    
+    MyAggreemts.appendChild(CallNowButton);
+  
+
+     var OfferPosterImage =  document.createElement("IMG");
+    OfferPosterImage.src = SecondUSER.proimage;
+    OfferPosterImage.onclick = function(){
+         ProfileViewer(OfferPosterUSER.info.uid);
+    }
+		
+	MyAggreemts.appendChild(OfferPosterImage);
+	
+	           var AggEnds = document.createElement("P");
 	           AggEnds.className = "SearchAdsFullViewDESCRIPTION";
 			   AggEnds.style.margin = "3px 0px 3px 0px";
 			   AggEnds.innerHTML = "Agreement Ends in";
@@ -2988,7 +3534,7 @@ function SortingDivElmentsTimeASC(MainContainer,NameClass){
 			   
 			   var StopWatchDiv = document.createElement("DIV");
 	           StopWatchDiv.className = "StopWatchDiv"; 			   
-			   var countDownDate = new Date(OfferObj.mainadinfo.mainadinfo.duedate).getTime();
+			   var countDownDate = new Date(AdObject.mainadinfo.duedate).getTime();
 			   var x = setInterval(function() {
   
                var now = new Date().getTime();    
@@ -3019,42 +3565,204 @@ function SortingDivElmentsTimeASC(MainContainer,NameClass){
                MessangeBox.innerHTML = "zzzz";		   
 	
 	           MyAggreemts.appendChild(MessangeBox);
-      
-           }
-	    else {
+	
+	
+	var SearchAdsFullViewDESCRIPTION = document.createElement("P");
+	SearchAdsFullViewDESCRIPTION.className = "SearchAdsFullViewDESCRIPTION";
+	SearchAdsFullViewDESCRIPTION.innerHTML = "Leave a message";
+	
+	MyAggreemts.appendChild(SearchAdsFullViewDESCRIPTION);
+
+	
+	var CommentZone = document.createElement("DIV");
+	CommentZone.className = "CommentSectionSearchAdsFullView";
+	
+	MyAggreemts.appendChild(CommentZone);
+	
+		firebase.firestore().collection("Agreements").doc(AdObject.mainadinfo.id)
+	                    .collection("Messages")
+						.orderBy("postedTime", "desc")
+						.limit(5).get().then(function(ONEquerySnapshot) {   	 	// For the job Posters 
+
+
+              ONEquerySnapshot.forEach(function(ONEdoc) {     
+
+			  MessageColumnCreator (CommentZone , ONEdoc.data() , AdObject);
+         
+         
+		           });
+		
+		
+
+	         });
+	
+	
+		
+    var AdQuestionWriterColum = document.createElement("DIV");
+	AdQuestionWriterColum.className = "AdQuestionWriterColum";
+	
+	MyAggreemts.appendChild(AdQuestionWriterColum);
+	
+	var SubmitButtonQuesWriter = document.createElement("DIV");
+	SubmitButtonQuesWriter.className = "SubmitButtonQuesWriter";
+	SubmitButtonQuesWriter.innerHTML = " <div class='fa fa-send' ></div>";
+	SubmitButtonQuesWriter.onclick = function () {
+		SaveComment();
+	}
+	
+	AdQuestionWriterColum.appendChild(SubmitButtonQuesWriter);
+	
+	var ConversationInputFieldFRAME = document.createElement("DIV");
+	ConversationInputFieldFRAME.className = "ConversationInputFieldFRAME";
+	
+	AdQuestionWriterColum.appendChild(ConversationInputFieldFRAME);
+	
+	var ConversationInputField = document.createElement("INPUT");
+	ConversationInputField.className = "form-control";
+	ConversationInputField.id = "ConversationInputField";
+	ConversationInputField.placeholder = "Write your comment...";
+	ConversationInputField.onfocus = function(){
+		ConversationInputField.style.height = "85px";
+		ConversationInputFieldFRAME.style.height = "115px";
+	}
+	ConversationInputField.onblur = function(){
+		ConversationInputField.style.height = "35px";
+		ConversationInputFieldFRAME.style.height = "65px";
+	}
+	ConversationInputField.onkeypress = function(e){			
+			if(e.keyCode == 13){				
+			   SaveComment();			
+			}		
+		}
+	
+	function SaveComment(){		
+		if(ConversationInputField.value == ""){}
+		else{
+		   
+		   var messageOBJ = { messageID : GenerateNewIDfromDatabase() , messagePOSTER : FirstUSER.info.uid , messageRCVR : SecondUSER.info.uid , comment : ConversationInputField.value , postedTime :  new Date()} 
+		   ConversationInputField.value = "";
+		   AggrementMessageSaver(messageOBJ,AdObject,CommentZone);
+		   
+		}  
+	}
+	
+   ConversationInputFieldFRAME.appendChild(ConversationInputField);
+  
+
+	
+
+	
+	
+
+  }
+
+
+ 	Container.appendChild(MyAggreemts);
+	
+}
+
+
+function AggrementMessageSaver(messageOBJ,AdObject,Zone){
+	
+	var AgreementID = AdObject.mainadinfo.id;
+	
+	firebase.firestore().doc("Agreements/" + AgreementID + "/Messages/" + messageOBJ.messageID).set(messageOBJ).then(function(){	
 			
-			   var OfferDesTitleTEXT = document.createElement("P");
-	           OfferDesTitleTEXT.className = "SearchAdsFullViewDESCRIPTIONText";
-	           OfferDesTitleTEXT.style.padding = "10px 10px 10px 10px";
-	           OfferDesTitleTEXT.innerHTML = OfferObj.offerinfo.offerDescription;
+			MessageColumnCreator (Zone , messageOBJ , AdObject);
+		
 	
-	           MyAggreemts.appendChild(OfferDesTitleTEXT);
+	});	
 	
-	           var AggreementDesBox = document.createElement("DIV");
-	           AggreementDesBox.className = "AggreementDesBox";
-	           AggreementDesBox.innerHTML = "<p class =  'LegalInfoTitle' >Legal Information</p> " + "<p class =  'LegalInfo' >It Starts with u</p> ";
 	
-	           MyAggreemts.appendChild(AggreementDesBox);
-			   
-			   var MakeAgrmntButton = document.createElement("P");
-	           MakeAgrmntButton.className = "MakeAnOfferButton";
-	           MakeAgrmntButton.innerHTML = "Accept Offer";
-	           MakeAgrmntButton.onclick = function(){
-		       AgreementSaver(OfferObj.offerinfo,OfferObj);
-	           }
+}
+
+
+function MessageColumnCreator (Zone , messageOBJ , AdObject){
 	
-	           MyAggreemts.appendChild(MakeAgrmntButton);
-       
-            }		
-	});
+    var ParaColor;		
+
+	var CommentDescribe = messageOBJ.comment;
+	var TimeAgo = DateDiffFunction( new Date() , messageOBJ.postedTime);
+	
+	var MainColumn = document.createElement("DIV");
+	MainColumn.className = "CommentColumn";		
+	Zone.appendChild(MainColumn);
+	
+	firebase.firestore().collection("Users").doc(messageOBJ.messagePOSTER).get().then(function(USERdoc) {
+	
+    	
+	 firebase.storage().ref('UserProPics/' + USERdoc.id + '/Propic.png').getDownloadURL().then(function(url) {
+	 
+	
+	var leftSideComment = document.createElement("DIV");
+	leftSideComment. className = "leftSideComment";		
+	MainColumn.appendChild(leftSideComment);
+	
+	var AllAdsImageFrame = document.createElement("DIV");
+	AllAdsImageFrame. className = "AllAdsImageFrame";		
+	leftSideComment.appendChild(AllAdsImageFrame);
+	
+	var AllAdsImage = document.createElement("IMG");
+	AllAdsImage. className = "AllAdsImage";		
+	AllAdsImage.src = url;
+	AllAdsImage.onclick = function(){		
+		
+	ProfileViewer(messageOBJ.messagePOSTER);
+		
+	}
+	
+	AllAdsImageFrame.appendChild(AllAdsImage);	
+	
+	var rightSideComment = document.createElement("DIV");
+	rightSideComment. className = "rightSideComment";		
+	MainColumn.appendChild(rightSideComment);
+	
+	var PosterName = document.createElement("DIV");
+	PosterName. className = "PosterName";
+    PosterName.innerHTML = NameSplitter(USERdoc.data().name);
+    PosterName.onclick = function(){		
+		
+	ProfileViewer(messageOBJ.messagePOSTER);
+		
+	}
+	rightSideComment.appendChild(PosterName);
+	
+	var reportIcon = document.createElement("DIV");
+	reportIcon.id = "reportIcon";
+    reportIcon.className = "fa fa-flag";
+    reportIcon.onclick = function(){ alert("Report"); }	
+	rightSideComment.appendChild(reportIcon);
+	
+	var commentPara = document.createElement("DIV");
+	commentPara.className = "commentPara";
+	if(USERdoc.id == AdObject.posterinfo.uid){
+	   commentPara.style.background = "#3399ff";
+	   commentPara.style.color = "white";
+	}
+	else{
+	   MainColumn.className = "ReplyColumn";	
+	}
+    commentPara.innerHTML = CommentDescribe;	
+	rightSideComment.appendChild(commentPara);
+	
+	
+	var TimeComment = document.createElement("DIV");
+	TimeComment. className = "TimeComment";	
+    TimeComment.innerHTML = "<div class = 'TimeSmallText'> " + TimeAgo + " </div>";	
+	MainColumn.appendChild(TimeComment);
+	
+	
+	     });	 
+	
+	
+	});	 
 	
 	
 		
 }
 
-
  
- function AgreementSaver(OfferObj,NewOfferOBJ){
+ function AgreementSaver(OfferObj){
 	 
 	
 	 var AgreementID = OfferObj.AdID;
@@ -3076,7 +3784,7 @@ function SortingDivElmentsTimeASC(MainContainer,NameClass){
 		}).then(function(){	
 							
 		ConfirmAnimation();
-		OffersByUserCreatorApplicationsFullViewer(NewOfferOBJ);	
+		MainMenuSwitcher("AggreementButton");
         var UpdateMainAdsRef = firebase.firestore().collection("MainAds").doc(AgreementID);
 		return UpdateMainAdsRef.update({state : "ongoing"}).then(function() {
 			for(var count = 0 ; count < MyAdOBJECTS.length ; count++){
@@ -3096,30 +3804,54 @@ function SortingDivElmentsTimeASC(MainContainer,NameClass){
 
   function GenerateAllAggrements(){
 	 
+	var AdPosterNothingToShow = false;
+    var OfferPosterNothingToShow = false;	
+	 
 	var DataLengthLimit = 10;
 	var firestore1 = firebase.firestore().collection("Agreements")
 	                                    .where("adposterID", "==", UserID);
+	var firestore2 = firebase.firestore().collection("Agreements")
+	                                    .where("offerposter", "==", UserID);									
 										
-	ContainerMyAggrements.style.display = "block";
-   	ContainerMyAggrements.innerHTML = "";
-	Container.style.display = "none";
-	ContainerMyAds.style.display = "none";
-	ContainerSearchAds.style.display = "none";
-	ContainerSearchAds.scrollTop = 0; 
+	ChangeDisplayContainer("ContainerDisplay3");
 	SearchBox.style.height = "35px";      
 			  
     
-  		
+  	
     var ThisRef1 = firestore1.orderBy("postedTime", "desc").limit(DataLengthLimit); 
-	ThisRef1.get().then(function(ONEquerySnapshot) {
+	var ThisRef2 = firestore2.orderBy("postedTime", "desc").limit(DataLengthLimit); 
+
+
+	if(AggrementOfferOBJECTS.length > 0){
+		
+		for(var count = 0 ; count < AggrementOfferOBJECTS.length; count++){
+			
+			AggrementsColumnCreator(AggrementOfferOBJECTS[count],true);
+			
+		}
+		
+	}
+	else{
+
+	ThisRef1.get().then(function(ONEquerySnapshot) {   	 	// For the job Posters 
+
+    if(ONEquerySnapshot.docs.length == 0){
+
+        AdPosterNothingToShow = true;
+		  DisplayNothingAvailable();
+      
+     }
   
+    
 	LastAggrementAdPost = ONEquerySnapshot.docs[ONEquerySnapshot.docs.length - 1];
 	
 	
-    ONEquerySnapshot.forEach(function(ONEdoc) {
-	
-       
-	      AggrementsColumnCreator(ONEdoc.data());
+        ONEquerySnapshot.forEach(function(ONEdoc) {        
+
+         
+    
+          AggrementsColumnCreator(ONEdoc.data(),false);
+         
          
 		});
 		
@@ -3127,153 +3859,56 @@ function SortingDivElmentsTimeASC(MainContainer,NameClass){
 
 	});
 	
+	ThisRef2.get().then(function(ONEquerySnapshot) {   	// For the offer Posters or Worker aggrements
 
+    if(ONEquerySnapshot.docs.length == 0){
+
+       OfferPosterNothingToShow = true;
+	   DisplayNothingAvailable();
+      
+
+     }
   
-       OnScrollFunction();
-    function OnScrollFunction(){
-        var NoMoreLength = false;			
-	    var DOES_EXIST = false;	
-	    ContainerMyAggrements.onscroll = function (){		
-		if(this.scrollTop + window.innerHeight >= this.scrollHeight && DOES_EXIST == false && NoMoreLength == false){	
-		    DOES_EXIST = true; 	LoaderSpinnerAnimation();		
-		    setTimeout(function () { DOES_EXIST = false; LoaderSpinnerRemover(); }, 1500);
-			
-    var ThisRef1 = firestore1.orderBy("postedTime", "desc").limit(DataLengthLimit).startAfter(LastSearchAdOBJECTS); 
-	ThisRef1.get().then(function(ONEquerySnapshot) {
   
-	LastAggrementOBJECT = ONEquerySnapshot.docs[ONEquerySnapshot.docs.length - 1];
+	LastAggrementOfferPost = ONEquerySnapshot.docs[ONEquerySnapshot.docs.length - 1];
 	
 	
-    ONEquerySnapshot.forEach(function(ONEdoc) {
-	
-       
-	      AggrementsColumnCreator(ONEdoc.data());
+        ONEquerySnapshot.forEach(function(ONEdoc) {        
+
+         
+    
+          AggrementsColumnCreator(ONEdoc.data(),false);
+         
          
 		});
 		
 		
 
-	});
+	});	
 	
-
-					   
-		            
-            
+	
+	}
+	
+	function DisplayNothingAvailable(){
+		
+		if(OfferPosterNothingToShow == true && AdPosterNothingToShow == true){
+		var DisPlayNull = document.createElement("DIV");	
+        DisPlayNull.innerHTML = "Nothings here...";
+        ContainerMyAggrements.appendChild(DisPlayNull);  	
+        return;
 		}
-    } 
-
-	}	
-	
-	
 		
+	}
 	 
 	 
  }
   
 
 
-function AggrementsColumnCreator(Aggrements){
-	
-	var AdObject;
-	var AdPoster;
-	var AdPosterImage;
-	var OfferInfo;
-	var OfferPoster;
-	var OfferPosterImage;
-  		
-    firebase.firestore().collection("MainAds").doc(Aggrements.id).get().then(function(ONEquerySnapshot) {
-	
-	AdObject = ONEquerySnapshot.data();
-	
-						    	
-	firebase.firestore().collection("Users").doc(AdObject.posterID).get().then(function(AdUSERdoc) {
-		 
-	 
-	AdPoster = AdUSERdoc.data();  	
-    
-	 firebase.storage().ref('UserProPics/' + AdObject.posterID + '/Propic.png').getDownloadURL().then(function(url) {
-	 AdPosterImage = url;  
-	 
-	  firebase.firestore().collection("OfferZone").doc(Aggrements.offerID).get().then(function(OfferData) {
-	   OfferInfo = OfferData.data();
-	   
-	   firebase.firestore().collection("Users").doc(OfferInfo.offerposterID).get().then(function(OfferUser) {
-	   OfferPoster = OfferUser.data();
-	   
-	   firebase.storage().ref('UserProPics/' + OfferInfo.offerposterID + '/Propic.png').getDownloadURL().then(function(url) {
-	  OfferPosterImage = url;  
-	  
-	  
-	var UserName = OfferPoster.name;
-	var price = OfferInfo.offerprice + " ৳  ";
-	var priceText = price;
-	
-	var ProImage = "";
-	
-	if(UserID == AdPoster.uid){
-	   ProImage = OfferPosterImage;
-	}
-	else{
-	   ProImage = AdPosterImage;
-	}
-	
-	 
-	
-	UserName = NameSplitter(UserName);
-	
-	var Cover = document.createElement("DIV");	
-	Cover.className = "Cover";
-	Cover.innerHTML = "<p class ='DEStoTIME' hidden>" + Aggrements.postedTime + " </p>";
-	
-	ContainerMyAggrements.appendChild(Cover);
-					
-	var MyAggreemts = document.createElement("DIV");
-	MyAggreemts.className = "MyAggrementsColumn";
-	MyAggreemts.style.minHeight = "75px";
-	MyAggreemts.onclick = function(){
-		
-		CoverOnclick();
-	
-	}	
-	Cover.appendChild(MyAggreemts);
-	
-	var ImageSideAggrements = document.createElement("DIV");
-	ImageSideAggrements.className = "ImageSideAggrements";
-	ImageSideAggrements.innerHTML = " <div class = 'AllAdsImageFrame'>  <img class= 'AllAdsImage' src= " + ProImage+ ">  </div>";
-		
-	MyAggreemts.appendChild(ImageSideAggrements);
-	
-	var InfoSideAggrements = document.createElement("DIV");
-	InfoSideAggrements.className = "InfoSideAggrements";
-	InfoSideAggrements.innerHTML = " <div class = 'PosterName' >" + UserName + "  </div> ";
-		
-	MyAggreemts.appendChild(InfoSideAggrements);
-	
-	
-	
-	SortingDivElmentsTimeASC(ContainerMyAggrements,"Cover");
-			
 
-	     
-	   
-	   
-	   	}); 
-	
-	 	}); 
-	   
-	
-	 	});  
-					   
-		
-		});  
-					   
-		});
-					   
-		  
-					   
-	});
-	
-}
+
+
+
  
 // Extraaaaaaaaaa
 
@@ -3474,6 +4109,9 @@ function DateDiffFunction(EndDate , StartDate){
 	
 	
 }
+
+
+
 
 
 function MonthToString(month){
