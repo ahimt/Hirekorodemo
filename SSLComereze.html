@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<title>My jQuery JSON Web Page</title>
+<head>
+
+ <form id="resultDivContainer" class="resultDivContainer" method="post" action="https://sandbox.sslcommerz.com/gwprocess/v3/api.php">
+  <input type="hidden" name="store_id" value="redin5af1673999106">
+  <input type="hidden" name="store_passwd" value="redin5af1673999106@ssl">
+  <input type="text"   name="total_amount" value="50">
+  <input type="text" name="currency" value="BDT">
+    <input type="hidden" name="tran_id" value="253234124asd">
+	  <input type="hidden" name="success_url" value="https://ahimt.github.io/Hirekorodemo/">
+	    <input type="hidden" name="fail_url" value="https://ahimt.github.io/Hirekorodemo/">
+		  <input type="hidden" name="cancel_url" value="https://ahimt.github.io/Hirekorodemo/">
+		    <input type="hidden" name="emi_option" value="0">
+			  <input type="text" name="cus_name" value="Imtiaz">
+			    <input type="text" name="cus_email" value="tanik.imtiaz@gmail.com">
+				  <input type="text" name="cus_phone" value="+61403181780">
+				    <input type="text" name="value_a	" value="FUCK YOU">
+</form>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript">
+
+JSONTest = function() {
+
+    var resultDiv = $("#resultDivContainer");
+
+    $.ajax({
+        url: "https://sandbox.sslcommerz.com/gwprocess/v3/api.php",
+        type: "POST",
+        data: $('#resultDivContainer').serialize(),
+        dataType: "json",
+        success: function (result) {
+            switch (result) {
+                case true:
+                    processResponse(result);
+                    break;
+                default:
+                    resultDiv.html(result);
+            }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+        alert(xhr.status);
+        alert(thrownError);
+        }
+    });
+};
+
+</script>
+</head>
+<body>
+
+
+<div id="resultDivContainer"></div>
+
+<button type="button" onclick="JSONTest()">JSON</button>
+
+</body>
+</html> 
+
+
+
+
