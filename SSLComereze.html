@@ -3,58 +3,77 @@
 <title>My jQuery JSON Web Page</title>
 <head>
 
- <form id="resultDivContainer" class="resultDivContainer" method="post" action="https://sandbox.sslcommerz.com/gwprocess/v3/api.php">
-  <input type="hidden" name="store_id" value="redin5af1673999106">
-  <input type="hidden" name="store_passwd" value="redin5af1673999106@ssl">
-  <input type="text"   name="total_amount" value="50">
-  <input type="text" name="currency" value="BDT">
-    <input type="hidden" name="tran_id" value="253234124asd">
-	  <input type="hidden" name="success_url" value="https://ahimt.github.io/Hirekorodemo/">
-	    <input type="hidden" name="fail_url" value="https://ahimt.github.io/Hirekorodemo/">
-		  <input type="hidden" name="cancel_url" value="https://ahimt.github.io/Hirekorodemo/">
-		    <input type="hidden" name="emi_option" value="0">
-			  <input type="text" name="cus_name" value="Imtiaz">
-			    <input type="text" name="cus_email" value="tanik.imtiaz@gmail.com">
-				  <input type="text" name="cus_phone" value="+61403181780">
-				    <input type="text" name="value_a	" value="FUCK YOU">
-</form>
 
+  <input type="hidden" id="store_id" value="redin5af1673999106">
+  <input type="hidden" id="store_passwd" value="redin5af1673999106@ssl">
+  <input type="text"   id="total_amount" value="50">
+  <input type="text" id="currency" value="BDT">
+    <input type="hidden" id="tran_id" value="253234124asd">
+	  <input type="hidden" id="success_url" value="https://ahimt.github.io/Hirekorodemo/">
+	    <input type="hidden" id="fail_url" value="https://ahimt.github.io/Hirekorodemo/">
+		  <input type="hidden" id="cancel_url" value="https://ahimt.github.io/Hirekorodemo/">
+		    <input type="hidden" id="emi_option" value="0">
+			  <input type="text" id="cus_name" value="Imtiaz">
+			    <input type="text" id="cus_email" value="tanik.imtiaz@gmail.com">
+				  <input type="text" id="cus_phone" value="+61403181780">
+				    <input type="text" id="value_a" value="FUCK YOU">
+
+<button onclick="GetResponse()">aaaaaaa</button>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script type="text/javascript">
 
-JSONTest = function() {
+function GetResponse(){
 
-    var resultDiv = $("#resultDivContainer");
 
-    $.ajax({
-        url: "https://sandbox.sslcommerz.com/gwprocess/v3/api.php",
-        type: "POST",
-        data: $('#resultDivContainer').serialize(),
-        dataType: "json",
-        success: function (result) {
-            switch (result) {
-                case true:
-                    processResponse(result);
-                    break;
-                default:
-                    resultDiv.html(result);
-            }
-        },
-        error: function (xhr, ajaxOptions, thrownError) {
-        alert(xhr.status);
-        alert(thrownError);
-        }
-    });
-};
+var store_id = 	    document.getElementById("store_id").value;
+var store_passwd = 	document.getElementById("store_passwd").value;
+var total_amount = 	document.getElementById("total_amount").value;
+var currency = 	    document.getElementById("currency").value;
+var tran_id = 	    document.getElementById("tran_id").value;
+var success_url = 	document.getElementById("success_url").value;
+var fail_url = 	    document.getElementById("fail_url").value;
+var cancel_url = 	document.getElementById("cancel_url").value;
+var emi_option = 	document.getElementById("emi_option").value;
+var cus_name = 	    document.getElementById("cus_name").value;
+var cus_email = 	document.getElementById("cus_email").value;
+var cus_phone = 	document.getElementById("cus_phone").value;
+var value_a = 	    document.getElementById("value_a").value;  
+
+var variable_in_link = "store_id=" + store_id + "&store_passwd=" + store_passwd 
++ "&total_amount=" + total_amount + "&currency=" + currency + "&tran_id=" + tran_id 
++ "&success_url=" + success_url + "&fail_url=" + fail_url + "&cancel_url=" 
++ cancel_url + "&emi_option=" + emi_option + "&cus_name=" + cus_name + "&cus_email="
++ cus_email + "&cus_phone=" + cus_phone + "&value_a=" + value_a;
+
+
+
+var hr = new XMLHttpRequest();
+var URL = "https://sandbox.sslcommerz.com/gwprocess/v3/api.php";
+hr.open("GET",URL,true); 
+hr.setRequestHeader("Content-type", "application/x-www-form-urlencoded"); alert(variable_in_link);
+hr.onreadystatechange = function(){
+
+     if(hr.readyState == 4 && hr.status == 200){
+	       
+		   var getData = hr.responseText;
+		   alert(getData);
+	 
+	 }else{
+	    alert(hr.responseText);
+	 }
+
+
+}
+hr.send(variable_in_link);
+
+}
+
 
 </script>
 </head>
 <body>
 
 
-<div id="resultDivContainer"></div>
-
-<button type="button" onclick="JSONTest()">JSON</button>
 
 </body>
 </html> 

@@ -347,6 +347,7 @@ var LogoBar = document.createElement("DIV");            // Creating the LogoBar 
 
 	MainMenuSwitcher("PostAJobButton");
 
+
 	 
     JobSearchNotification = document.getElementById("JobSearchNotification");        // Geting Element for the Search Job Noti
     ApplicationNotification = document.getElementById("ApplicationNotification");    // Geting Element for the Application Noti
