@@ -138,6 +138,9 @@ var LastAggrementOfferPost;
 
 
 function CreatingAllTheNavigation(){
+	
+		  	SaveToken();
+	
 		
 	document.body.innerHTML = "";	
 	document.body.style.background =  "#f2f2f2";//"linear-gradient(to right, white, #d9d9d9)";
@@ -653,6 +656,7 @@ function PageStateChangerWithPageTITLE(MenuString){
 
 function PostAJobButtonGenerate(){
 	
+
 	
 	ChangeDisplayContainer("ContainerDisplay0");
 	
@@ -1605,7 +1609,8 @@ function RegisterUser(UserID,displayName,Phone,Email,PhotoURL){
 	                
 	                       firebase.firestore().collection("Users").doc(UserID).set({
 		                   
-						    uid : UserID , 
+						    uid : UserID ,
+                            token : MessageToken,							
 							description : "",
 		                    name: displayName,
 							regitime : new Date(), 
@@ -1819,6 +1824,7 @@ function SaveMainAds(AdTemplate , AdsState , Postit){
 							 
 	                         }); 
 							  
+						
 							  
 							 ConfirmAnimation();
 							 MyAdOBJECTS = [];
@@ -4097,3 +4103,94 @@ function MonthToString(month){
 	
 	
 }
+
+
+/*
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<title>My jQuery JSON Web Page</title>
+<head>
+
+
+  <input type="hidden" id="store_id" value="redin5af1673999106">
+  <input type="hidden" id="store_passwd" value="redin5af1673999106@ssl">
+  <input type="text"   id="total_amount" value="50">
+  <input type="text" id="currency" value="BDT">
+    <input type="hidden" id="tran_id" value="253234124asd">
+	  <input type="hidden" id="success_url" value="https://ahimt.github.io/Hirekorodemo/">
+	    <input type="hidden" id="fail_url" value="https://ahimt.github.io/Hirekorodemo/">
+		  <input type="hidden" id="cancel_url" value="https://ahimt.github.io/Hirekorodemo/">
+		    <input type="hidden" id="emi_option" value="0">
+			  <input type="text" id="cus_name" value="Imtiaz">
+			    <input type="text" id="cus_email" value="tanik.imtiaz@gmail.com">
+				  <input type="text" id="cus_phone" value="+61403181780">
+				    <input type="text" id="value_a" value="FUCK YOU">
+
+<button onclick="GetResponse()">aaaaaaa</button>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript">
+
+function GetResponse(){
+
+
+var store_id = 	    document.getElementById("store_id").value;
+var store_passwd = 	document.getElementById("store_passwd").value;
+var total_amount = 	document.getElementById("total_amount").value;
+var currency = 	    document.getElementById("currency").value;
+var tran_id = 	    document.getElementById("tran_id").value;
+var success_url = 	document.getElementById("success_url").value;
+var fail_url = 	    document.getElementById("fail_url").value;
+var cancel_url = 	document.getElementById("cancel_url").value;
+var emi_option = 	document.getElementById("emi_option").value;
+var cus_name = 	    document.getElementById("cus_name").value;
+var cus_email = 	document.getElementById("cus_email").value;
+var cus_phone = 	document.getElementById("cus_phone").value;
+var value_a = 	    document.getElementById("value_a").value;  
+
+var variable_in_link = "store_id=" + store_id + "&store_passwd=" + store_passwd 
++ "&total_amount=" + total_amount + "&currency=" + currency + "&tran_id=" + tran_id 
++ "&success_url=" + success_url + "&fail_url=" + fail_url + "&cancel_url=" 
++ cancel_url + "&emi_option=" + emi_option + "&cus_name=" + cus_name + "&cus_email="
++ cus_email + "&cus_phone=" + cus_phone + "&value_a=" + value_a;
+
+
+'https://sandbox.sslcommerz.com/gwprocess/v3/api.php?store_id=redin5af1673999106&store_passwd=redin5af1673999106@ssl&total_amount=50&currency=BDT&tran_id=253234124asd&success_url=https://ahimt.github.io/Hirekorodemo/&fail_url=https://ahimt.github.io/Hirekorodemo/&cancel_url=https://ahimt.github.io/Hirekorodemo/&emi_option=0&cus_name=Imtiaz&cus_email=tanik.imtiaz@gmail.com&cus_phone=+61403181780&value_a=FUCK YOU'
+var hr = new XMLHttpRequest();
+var URL = "https://sandbox.sslcommerz.com/gwprocess/v3/api.php?";
+hr.open("GET",URL,true); 
+hr.setRequestHeader("Content-type", "application/x-www-form-urlencoded"); console.log(variable_in_link);
+hr.onreadystatechange = function(){
+
+     if(hr.readyState == 4 && hr.status == 200){
+	       
+		   var getData = hr.responseText;
+		   alert(getData);
+	 
+	 }else{
+	    alert(hr.responseText);
+	 }
+
+
+}
+hr.send(variable_in_link);
+
+}
+
+
+</script>
+</head>
+<body>
+
+
+
+</body>
+</html> 
+
+
+
+
+
+
+
+*/
