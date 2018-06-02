@@ -105,11 +105,12 @@
 
 document.getElementById("TermsAndConditionAAA").style.width = "0px";
 
-var DisplayName;
-var Email;
-var PhotoURL;
-var UserID;
-var CurrentLocation;
+var DisplayName = "";
+var Email = "";
+var PhotoURL = "";
+var UserID = "";
+var CurrentLocation = "";
+var MessageToken = "";
 
        
 firebase.auth().onAuthStateChanged(function(user) {
