@@ -114,7 +114,7 @@ var UserID = "";
 var CurrentLocation = "";
 var MessageToken = "";
 
-
+var UserData;
 
        
 firebase.auth().onAuthStateChanged(function(user) {
@@ -135,7 +135,7 @@ if(user){
 	firebase.firestore().collection("Users").doc(UserID).get().then(function(doc) {
     if (doc.exists) {
 	
-
+      UserData = doc.data();
       CreatingAllTheNavigation();
 	  
 
