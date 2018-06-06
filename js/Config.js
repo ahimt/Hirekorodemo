@@ -147,24 +147,5 @@ function FaceBookLogin(){
   }
 
   
-  function SaveToken(){
-	  
-messaging.requestPermission()
-.then (function(){
-		console.log(messaging.getToken());
-	return messaging.getToken();
 
-}).then(function(token){
-	
-	MessageToken = token;
-		console.log(token);
-	
-
-})
-.catch(function(err){
-	
-	alert("not Granted");
-});
-
-	  
-  }
+  

@@ -28,6 +28,8 @@ var SearchBoxContainer;
 
 var Modal;
 var Modalcontent;
+var ConfirmModal;
+var ConfirmModalcontent;
 
 function OpentCloseMenu(){ MenuContents.scrollTop = 0; if(Menu.style.width == "250px"){	Menu.style.width = "0px"; Menu.style.boxShadow = "none"; }else{Menu.style.width = "250px"; Menu.style.boxShadow = "15px 15px 15px gray";}	}	
 	
@@ -100,6 +102,8 @@ var PageTitleDiv ;
 var SearchAdOBJECTS = [];          // Ojbects to store MY Ads
 function SaveSearchAdOBJECTS(AdObject){
 
+
+
 var Tempdata = { mainadinfo : AdObject, posterinfo : null , userphotolink : null , comment : 0 , applications : 0 , postedTime : AdObject.updatedTime , imgurls : AdObject.imagename};
 	
 firebase.firestore().collection("Users").doc(AdObject.posterID).get().then(function(USERdoc) {
@@ -116,9 +120,19 @@ firebase.firestore().collection("Users").doc(AdObject.posterID).get().then(funct
 	                   CommentCountRef.get().then(function(TWOquerySnapshot) {
 					   Tempdata.comment = TWOquerySnapshot.docs.length + Tempdata.comment; // Getting Number of Comments					 
 						  AllAdsCreator(Tempdata,ContainerSearchAds); 
-						 SearchAdOBJECTS.push(Tempdata);						
+					
+					        for(var i = 0 ; i < SearchAdOBJECTS.length ; i++){
+		      	           
+		                        if(SearchAdOBJECTS[i].mainadinfo.id == Tempdata.mainadinfo.id){                                 
+			                    return;
+		                        }
+		             
+	                        }
+		
+						     SearchAdOBJECTS.push(Tempdata);	
+                           						 
 						 
-						 
+						
 					   
 					   });
 				 });	
@@ -129,9 +143,142 @@ firebase.firestore().collection("Users").doc(AdObject.posterID).get().then(funct
 	
 });
 	
+
+
 	
 }
 var LastSearchAdOBJECTS ;
+
+
+
+
+var MyAggOBJECTS = []; 
+
+function AggrementsColumnCreator(Aggrements ){
+	
+	var AdObject;
+    var Comments = 0;
+    var Applications = 0;
+	var AdPoster;
+	var AdPosterImage;
+	var OfferInfo;
+	var OfferPoster;
+	var OfferPosterImage;
+    var PrivateInfo;
+	
+	var Offerer;
+	
+	var FirstUSER = {info : "" , proimage : ""};
+	var SecondUSER = {info : "" , proimage : ""};
+	
+
+  		
+    firebase.firestore().collection("MainAds").doc(Aggrements.id).get().then(function(ONEquerySnapshot) {
+	
+	AdObject = ONEquerySnapshot.data();
+	
+    firebase.firestore().collection("OfferZone").where("AdID", "==", AdObject.id).get().then(function(THREEdoc) {			                 
+				 
+         Applications = THREEdoc.docs.length; // Getting Number of Applications
+				   
+	firebase.firestore().collection("MainAds").doc(AdObject.id).collection("CommentZone").get().then(function(TWOquerySnapshot) {
+		
+         Comments = TWOquerySnapshot.docs.length ; // Getting Number of Comments
+						  						
+				
+						    	
+	firebase.firestore().collection("Users").doc(AdObject.posterID).get().then(function(AdUSERdoc) {
+		 
+	 
+	AdPoster = AdUSERdoc.data();  	
+    
+	 firebase.storage().ref('UserProPics/' + AdObject.posterID + '/Propic.png').getDownloadURL().then(function(url) {
+	 AdPosterImage = url;  
+	 
+	 firebase.firestore().collection("OfferZone").doc(Aggrements.offerID).get().then(function(OfferData) {
+	 OfferInfo = OfferData.data();
+
+
+	   
+	 firebase.firestore().collection("Users").doc(OfferInfo.offerposterID).get().then(function(OfferUser) {
+	 OfferPoster = OfferUser.data();
+	   
+	 firebase.storage().ref('UserProPics/' + OfferInfo.offerposterID + '/Propic.png').getDownloadURL().then(function(url) {
+	 OfferPosterImage = url;  
+	  
+	
+	var UserName = OfferPoster.name;
+	var price = OfferInfo.offerprice + " ৳  ";
+	var priceText = price;
+	
+	var ProImage = ""	
+	
+	if(UserID == AdPoster.uid){
+	   FirstUSER.info = AdPoster;
+	   FirstUSER.proimage = AdPosterImage;
+	   SecondUSER.info = OfferPoster;
+	   SecondUSER.proimage = OfferPosterImage;
+	   Offerer = SecondUSER;
+	   
+	}else{
+	   SecondUSER.info = AdPoster;
+	   SecondUSER.proimage = AdPosterImage;
+	   FirstUSER.info = OfferPoster;
+	   FirstUSER.proimage = OfferPosterImage;	
+       Offerer = FirstUSER;	   
+	}
+
+
+	  
+		  
+  var Cover = document.createElement("DIV");
+  Cover.className = "Cover";
+  Cover.innerHTML = Aggrements.id + "<br>" + OfferInfo.offerprice + "<br>" + SecondUSER.info.name 
+  + "<br> <img src="+ SecondUSER.proimage + " height='50' width='50'> " 
+   + "<p class ='DEStoTIME' hidden>" + Aggrements.updateTime + " </p>"; 
+  
+  var Tempdata = { mainadinfo : AdObject, posterinfo : AdPoster , userphotolink : AdPosterImage , comment : Comments , applications : Applications , postedTime : AdObject.updatedTime , imgurls : AdObject.imagename , aggrement : Aggrements , offerinfo :OfferInfo  , offerer : Offerer };
+   MyAggOBJECTS.push(Tempdata);  
+ console.log(MyAggOBJECTS.length);  
+  Cover.onclick = function(){
+         
+       OffersByUserCreatorApplicationsFullViewer(OfferInfo,Tempdata,Offerer);
+	  
+  }
+  
+  ContainerMyAggrements.appendChild(Cover);
+
+  SortingDivElmentsTimeASC(ContainerMyAggrements,"Cover");
+		  
+
+            
+     
+	   
+	
+	 	}); 
+	   
+	
+	 	});  
+					   
+		
+		});  
+					   
+		});
+					   
+		  
+					   
+	});
+
+	   });
+				 });
+
+      });
+	  
+	
+}
+
+
+
 
 var LastAggrementAdPost;
 var LastAggrementOfferPost;
@@ -139,9 +286,7 @@ var LastAggrementOfferPost;
 
 function CreatingAllTheNavigation(){
 	
-		  	SaveToken();
 	
-		
 	document.body.innerHTML = "";	
 	document.body.style.background =  "#f2f2f2";//"linear-gradient(to right, white, #d9d9d9)";
 	
@@ -404,6 +549,8 @@ var LogoBar = document.createElement("DIV");            // Creating the LogoBar 
     },delay); 
     });	
 	
+	// Image Viewer modal start
+	
 	Modal = document.createElement("DIV");
 	Modal.className = "modal";
 	document.body.appendChild(Modal);
@@ -418,7 +565,16 @@ var LogoBar = document.createElement("DIV");            // Creating the LogoBar 
 	Modalcontent.className = "modal-content";
 	Modal.appendChild(Modalcontent);
 	
+    // Image Viewer modal end
+	
+	
+
+	
+
+	
+	GetRealTimeAgreements();
 	GetRealTimeSearchAllAds();
+	
 	
 	setTimeout(function(){
      VARIABLE_THAT_CONFIRMS_FIRST_RUN_DONE = true;
@@ -1272,6 +1428,32 @@ function UPDATEJobPostingFormCreator(AdObject){
 	
 	FormGroupDiv.appendChild(POSTIT);
 	
+    var DeleteButton = document.createElement("BUTTON");
+	DeleteButton.innerHTML = "DELETE";
+	DeleteButton.onclick = function(){
+		  
+		  firebase.firestore().collection("MainAds").doc(AdTemplate.id).delete().then(function() {
+			  
+               for(var i = 0 ; i < MyAdOBJECTS.length ; i++){
+		      	           
+		                        if(MyAdOBJECTS[i].mainadinfo.id == AdTemplate.id){ 
+                                   MyAdOBJECTS.splice(i, 1);
+								   ConfirmAnimation();
+		                           MainMenuSwitcher("MyAdsButton");
+			                    return;
+		                        }
+		             
+	                        }
+							
+             }).catch(function(error) {
+            console.error("Error removing document: ", error);
+            });
+		  
+		  
+	}
+	
+	AllinOneDivContainer.appendChild(DeleteButton);
+	
 	var TickIcons = [TitleTickIcone,DescriptionTickIcon,BudgetTickIcon];
 	
     TitleTickIcone.className="fa fa-check-square-o";
@@ -1866,9 +2048,10 @@ function GenerateOnlyMyAds(){
                     AllAdsCreator(MyAdOBJECTS[count],ContainerMyAds); 
 			}
 	   
+	   return;
+	   
 	}
-	else{
-		                   
+               
     
     var OnlyMyAdsRef = firestore.orderBy("updatedTime", "desc").limit(DataLengthLimit); 
 	OnlyMyAdsRef.get().then(function(ONEquerySnapshot) {
@@ -1935,7 +2118,7 @@ function GenerateOnlyMyAds(){
 
 	}
 	
-	}
+
 
   
   
@@ -1947,7 +2130,7 @@ function GetRealTimeSearchAllAds(){
 	
 	
 	var DataLengthLimit = 1;
-	var firestore = firebase.firestore().collection("MainAds").orderBy("updatedTime", "desc").limit(DataLengthLimit); 
+	var firestore = firebase.firestore().collection("MainAds").limit(DataLengthLimit); 
 	firestore.onSnapshot(function(ONEquerySnapshot) {
 		
 		var First_run_complete = VARIABLE_THAT_CONFIRMS_FIRST_RUN_DONE;
@@ -1966,7 +2149,34 @@ function GetRealTimeSearchAllAds(){
 	
 }
 
+
+function GetRealTimeAgreements(){
 	
+  
+	var firestore = firebase.firestore().collection("Agreements").where("lastMsgBy", "==", UserID); 
+	firestore.onSnapshot(function(ONEquerySnapshot) {
+		
+		var First_run_complete = VARIABLE_THAT_CONFIRMS_FIRST_RUN_DONE;
+		ONEquerySnapshot.forEach(function(ONEdoc) {
+
+       
+	    if(First_run_complete == true){ 
+		
+		console.log("AAAAAAAAAAAA");
+		
+		}
+   
+	
+		});
+		
+		
+
+	});
+	
+	
+}
+
+
 function GenerateSearchAllAds(){
 
     ChangeDisplayContainer("ContainerDisplay2");
@@ -1989,11 +2199,11 @@ function GenerateSearchAllAds(){
 			        
                     AllAdsCreator(SearchAdOBJECTS[count],ContainerSearchAds);
 		}
+		
+		return;
 	   
 	}
-	else{
-		         
-			  
+	 
     
   		
     var OnlyMyAdsRef = firestore.orderBy("updatedTime", "desc").limit(DataLengthLimit); 
@@ -2065,7 +2275,7 @@ function GenerateSearchAllAds(){
 
 	}	
 		
-}
+
 
 	
 	
@@ -3443,10 +3653,9 @@ firebase.firestore().collection("Users").doc(OfferOject.offerposterID).get().the
 	
 	MyAggreemts.appendChild(CommentZone);
 	
-		firebase.firestore().collection("Agreements").doc(AdObject.mainadinfo.id)
-	                    .collection("Messages")
-						.orderBy("postedTime", "desc")
-						.limit(5).get().then(function(ONEquerySnapshot) {   	 	// For the job Posters 
+		firebase.firestore().collection("Messages")
+						    .where("aggrementID", "==", AdObject.mainadinfo.id)
+						    .limit(5).get().then(function(ONEquerySnapshot) {   	 	// For the job Posters 
 
 
               ONEquerySnapshot.forEach(function(ONEdoc) {     
@@ -3503,7 +3712,7 @@ firebase.firestore().collection("Users").doc(OfferOject.offerposterID).get().the
 		if(ConversationInputField.value == ""){}
 		else{
 		   
-		   var messageOBJ = { messageID : GenerateNewIDfromDatabase() , messagePOSTER : FirstUSER.info.uid , messageRCVR : SecondUSER.info.uid , comment : ConversationInputField.value , postedTime :  new Date()} 
+		   var messageOBJ = { messageID : GenerateNewIDfromDatabase() , messagePOSTER : FirstUSER.info.uid , messageRCVR : SecondUSER.info.uid , comment : ConversationInputField.value , aggrementID : AdObject.mainadinfo.id , postedTime :  new Date()} 
 		   ConversationInputField.value = "";
 		   AggrementMessageSaver(messageOBJ,AdObject,CommentZone);
 		   
@@ -3528,17 +3737,36 @@ firebase.firestore().collection("Users").doc(OfferOject.offerposterID).get().the
 
 function AggrementMessageSaver(messageOBJ,AdObject,Zone){
 	
-	var AgreementID = AdObject.mainadinfo.id;
+	AdObject.aggrement.updateTime = new Date();
+	AdObject.aggrement.lastMsgBy = messageOBJ.messageRCVR;
 	
-	firebase.firestore().doc("Agreements/" + AgreementID + "/Messages/" + messageOBJ.messageID).set(messageOBJ).then(function(){	
+	firebase.firestore().doc("Messages/" + messageOBJ.messageID).set(messageOBJ).then(function(){	
 			
-			MessageColumnCreator (Zone , messageOBJ , AdObject);
+		MessageColumnCreator (Zone , messageOBJ , AdObject);
 		
+		firebase.firestore().doc("Agreements/" + AdObject.aggrement.id).set(AdObject.aggrement).then(function() {
+           console.log(UserID + " Last messager");
+          });
+		
+		
+		firebase.firestore().doc("Activity/" + messageOBJ.messageID ).set({
+		
+		   id : messageOBJ.messageID,
+		   activitytype : "messagepost",
+		   senderID : messageOBJ.messagePOSTER,
+		   receiverID : messageOBJ.messageRCVR
 	
+	     }).then(function() {
+           console.log("Document successfully written!");
+          });
+       		
+			
 	});	
 	
 	
 }
+
+
 
 
 function MessageColumnCreator (Zone , messageOBJ , AdObject){
@@ -3549,7 +3777,8 @@ function MessageColumnCreator (Zone , messageOBJ , AdObject){
 	var TimeAgo = DateDiffFunction( new Date() , messageOBJ.postedTime);
 	
 	var MainColumn = document.createElement("DIV");
-	MainColumn.className = "CommentColumn";		
+	MainColumn.className = "CommentColumn";	
+    MainColumn.innerHTML = "<p class ='DEStoTIME' hidden>" + messageOBJ.postedTime + " </p>"; 	
 	Zone.appendChild(MainColumn);
 	
 	firebase.firestore().collection("Users").doc(messageOBJ.messagePOSTER).get().then(function(USERdoc) {
@@ -3614,6 +3843,7 @@ function MessageColumnCreator (Zone , messageOBJ , AdObject){
 	TimeComment. className = "TimeComment";	
     TimeComment.innerHTML = "<div class = 'TimeSmallText'> " + TimeAgo + " </div>";	
 	MainColumn.appendChild(TimeComment);
+	SortingDivElmentsTimeASC(Zone,"CommentColumn")
 	
 	
 	     });	 
@@ -3643,7 +3873,9 @@ function MessageColumnCreator (Zone , messageOBJ , AdObject){
 				 offerID : OfferID,
 		         offerposter: OfferPosterID,
 				 adposterID : AdPosterID,
-				 postedTime : new Date()
+				 postedTime : new Date(),
+				 updateTime : new Date(),
+				 lastMsgBy     : UserID
 		
 		}).then(function(){	
 							
@@ -3667,6 +3899,22 @@ function MessageColumnCreator (Zone , messageOBJ , AdObject){
  }
 
   function GenerateAllAggrements(){
+	  
+	  
+	 if(MyAggOBJECTS.length > 0){
+	   
+
+	   
+		for(var count = 0; count < MyAggOBJECTS.length ; count ++){			
+                  
+               alert("Data Found! UI not created!");
+				  
+			}
+			
+		return;	
+	   
+	}
+	
 	 
 	var AdPosterNothingToShow = false;
     var OfferPosterNothingToShow = false;	
@@ -3754,126 +4002,6 @@ function MessageColumnCreator (Zone , messageOBJ , AdObject){
 	 
  }
   
-
-
-function AggrementsColumnCreator(Aggrements ){
-	
-	var AdObject;
-    var Comments = 0;
-    var Applications = 0;
-	var AdPoster;
-	var AdPosterImage;
-	var OfferInfo;
-	var OfferPoster;
-	var OfferPosterImage;
-    var PrivateInfo;
-	
-	var Offerer;
-	
-	var FirstUSER = {info : "" , proimage : ""};
-	var SecondUSER = {info : "" , proimage : ""};
-	
-
-  		
-    firebase.firestore().collection("MainAds").doc(Aggrements.id).get().then(function(ONEquerySnapshot) {
-	
-	AdObject = ONEquerySnapshot.data();
-	
-    firebase.firestore().collection("OfferZone").where("AdID", "==", AdObject.id).get().then(function(THREEdoc) {			                 
-				 
-         Applications = THREEdoc.docs.length; // Getting Number of Applications
-				   
-	firebase.firestore().collection("MainAds").doc(AdObject.id).collection("CommentZone").get().then(function(TWOquerySnapshot) {
-		
-         Comments = TWOquerySnapshot.docs.length ; // Getting Number of Comments
-						  						
-				
-						    	
-	firebase.firestore().collection("Users").doc(AdObject.posterID).get().then(function(AdUSERdoc) {
-		 
-	 
-	AdPoster = AdUSERdoc.data();  	
-    
-	 firebase.storage().ref('UserProPics/' + AdObject.posterID + '/Propic.png').getDownloadURL().then(function(url) {
-	 AdPosterImage = url;  
-	 
-	 firebase.firestore().collection("OfferZone").doc(Aggrements.offerID).get().then(function(OfferData) {
-	 OfferInfo = OfferData.data();
-
-
-	   
-	 firebase.firestore().collection("Users").doc(OfferInfo.offerposterID).get().then(function(OfferUser) {
-	 OfferPoster = OfferUser.data();
-	   
-	 firebase.storage().ref('UserProPics/' + OfferInfo.offerposterID + '/Propic.png').getDownloadURL().then(function(url) {
-	 OfferPosterImage = url;  
-	  
-	
-	var UserName = OfferPoster.name;
-	var price = OfferInfo.offerprice + " ৳  ";
-	var priceText = price;
-	
-	var ProImage = ""	
-	
-	if(UserID == AdPoster.uid){
-	   FirstUSER.info = AdPoster;
-	   FirstUSER.proimage = AdPosterImage;
-	   SecondUSER.info = OfferPoster;
-	   SecondUSER.proimage = OfferPosterImage;
-	   Offerer = SecondUSER;
-	   
-	}else{
-	   SecondUSER.info = AdPoster;
-	   SecondUSER.proimage = AdPosterImage;
-	   FirstUSER.info = OfferPoster;
-	   FirstUSER.proimage = OfferPosterImage;	
-       Offerer = FirstUSER;	   
-	}
-
-
-
-  var Cover = document.createElement("DIV");
-  Cover.className = "Cover";
-  Cover.innerHTML = Aggrements.id + "<br>" + OfferInfo.offerprice + "<br>" + SecondUSER.info.name 
-  + "<br> <img src="+ SecondUSER.proimage + " height='50' width='50'> " 
-   + "<p class ='DEStoTIME' hidden>" + OfferInfo.postedTime + " </p>"; 
-  Cover.onclick = function(){
-         
-		 
-	   var Tempdata = { mainadinfo : AdObject, posterinfo : AdPoster , userphotolink : AdPosterImage , comment : Comments , applications : Applications , postedTime : AdObject.updatedTime , imgurls : AdObject.imagename};
-  
-       OffersByUserCreatorApplicationsFullViewer(OfferInfo,Tempdata,Offerer);
-   
-  }
-  
-  ContainerMyAggrements.appendChild(Cover);
-
-  SortingDivElmentsTimeASC(ContainerMyAggrements,"Cover");
-
-            
-     
-	   
-	
-	 	}); 
-	   
-	
-	 	});  
-					   
-		
-		});  
-					   
-		});
-					   
-		  
-					   
-	});
-
-	   });
-				 });
-
-      });
-	
-}
 
 
 

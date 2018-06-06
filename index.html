@@ -35,16 +35,18 @@
 
 	<script src="https://sdk.accountkit.com/en_US/sdk.js"></script>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC2A67UwY9oFXk2SJPkTSFAxA2pYlQLmLY&libraries=places&callback=initAutocomplete"
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC2A67UwY9oFXk2SJPkTSFAxA2pYlQLmLY"
         async defer></script>
 
 
 	
 	
     <!-- Bootstrap core JavaScript -->
-    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/jquery/jquery.min.js"></script>	
+	<script src="vendor/bootstrap/js/tether.js"></script>	
     <script src="vendor/popper/popper.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+	
 
    
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
@@ -112,6 +114,8 @@ var UserID = "";
 var CurrentLocation = "";
 var MessageToken = "";
 
+
+
        
 firebase.auth().onAuthStateChanged(function(user) {
 
@@ -174,10 +178,6 @@ LoginButtonLoader();
 }
 
 });
-
-
-
-
 
 
 
