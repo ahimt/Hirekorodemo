@@ -54,7 +54,7 @@ var ApplicationNotification;       //Element to control the notification count i
 var JobRequestNotification;       //Element to control the notification count in JobRequest
 var MessagesNotification;       //Element to control the notification count in Messages
       
-
+var MessageServerUNSCRIBER;
 
 
 var HistoryObj = [];           // History Objects
@@ -2108,7 +2108,20 @@ function GetRealTimeSearchAllAds(){
 		ONEquerySnapshot.forEach(function(ONEdoc) {
 
        
-	    if(First_run_complete == true){ SaveSearchAdOBJECTS(ONEdoc.data());}
+	    if(First_run_complete == true){ 
+		
+		
+		if(ONEdoc.data().posterID != UserID){
+			
+			alert("New Job available");
+		SaveSearchAdOBJECTS(ONEdoc.data());
+			
+		}
+		
+		
+		
+		
+		}
    
 	
 		});
@@ -2125,13 +2138,14 @@ function GetRealTimeAgreements(){
 	
   
 	var firestore = firebase.firestore().collection("Agreements").where("lastMsgBy", "==", UserID); 
-	firestore.onSnapshot(function(ONEquerySnapshot) {
+	firestore.onSnapshot(function(ONEquerySnapshot) {   console.log(" First Run");
+	  var First_run_complete = VARIABLE_THAT_CONFIRMS_FIRST_RUN_DONE;
+      if(First_run_complete == true){ 
 		
-		var First_run_complete = VARIABLE_THAT_CONFIRMS_FIRST_RUN_DONE;
+	
 		ONEquerySnapshot.forEach(function(ONEdoc) {
-   console.log("New Agg");
-       
-	    if(First_run_complete == true){ 
+
+     
 		
 		    if(MyAggOBJECTS.length > 0){
 				
@@ -2139,31 +2153,79 @@ function GetRealTimeAgreements(){
                    
 				   if(MyAggOBJECTS[count].mainadinfo.id == ONEdoc.data().id)
 				   {
-					   MyAggOBJECTS[count].aggrement = ONEdoc.data();
-					   console.log("Agg Updated");
+					   var MyAgg = MyAggOBJECTS[count];
+					    
+					   MyAgg.aggrement = ONEdoc.data();
+					   
+					 
+					   PushMessageInDom(MyAgg);
+					   MakeMessageBold(MyAgg);
+					  
 					   
 				   }
 				   
 			     }
 				
 			}
-			else{
-				
-				alert("New Agg Notification");
-				
-			}
+			
 		
 		   
 	   
-		}
+	
    
 	
-		});
+		       });
 		
-		
+			}
 
 	});
 	
+	
+	
+	function PushMessageInDom(MyAgg){
+		
+		  
+					   var CommentZone = document.getElementById(MyAgg.mainadinfo.id + "CommentZone");
+					   
+                       if(CommentZone != null){						   
+						   
+						   firebase.firestore().collection("Agreements")
+						    .doc(MyAgg.mainadinfo.id).collection("Messages")
+						    .orderBy("postedTime", "desc").limit(1).get().then(function(TWOquerySnapshot) {  
+						
+					   TWOquerySnapshot.forEach(function(TWOdoc) { 
+                          
+						  UpdatedMessageRead(MyAgg);
+			              MessageColumnCreator (false , TWOdoc.data() , MyAgg);
+						
+                         });
+			
+	                     });   
+						   
+					   }
+		
+		
+	}
+	
+	
+	
+	
+	
+	function MakeMessageBold(MyAgg){
+		
+	
+		 var MakeBold = document.getElementById(MyAgg.mainadinfo.id + "AGG");
+		 
+		 if(MakeBold != null){
+			    MakeBold.style.fontWeight = "bold";
+		 document.getElementById(MyAgg.mainadinfo.id + "AGGDEStoTIME").innerHTML = MyAgg.aggrement.updateTime;
+		 SortingDivElmentsTimeDesc(ContainerMyAggrements,"Cover");
+		 }
+		 
+		 
+		
+		
+	}
 	
 }
 
@@ -2305,6 +2367,32 @@ function SortingDivElmentsTimeDesc(MainContainer,NameClass){
 	
 }
 
+
+
+
+function SortingDivElmentsTimeASC(MainContainer,NameClass){
+	
+	
+    var GetColums = MainContainer.getElementsByClassName(NameClass);
+	var GetDEStoTIMEColums = []; 
+       
+	for(var count = 0; count < GetColums.length ; count++){
+		var x = GetColums[count];
+	    GetDEStoTIMEColums.push(x);
+	}
+       
+    var sorted = GetDEStoTIMEColums.sort(function(a,b){ a = new Date(a.getElementsByClassName("DEStoTIME")[0].innerHTML);  b = new Date(b.getElementsByClassName("DEStoTIME")[0].innerHTML); return a - b ; } ); 
+    
+	MainContainer.innerHTML = "";
+    for( var i = 0; i < sorted.length; ++i ) {
+			
+		MainContainer.appendChild(sorted[i]);
+		
+    }
+       
+	
+	
+}
 
 
 function AllAdsCreator(AdObject,conn){
@@ -3327,32 +3415,6 @@ function SaveTheOfferOnMainAds(AdObject , OfferDes , OfferPrice , OfferButton){
 
 
 
-function SortingDivElmentsTimeASC(MainContainer,NameClass){
-	
-	
-    var GetColums = MainContainer.getElementsByClassName(NameClass);
-	var GetDEStoTIMEColums = []; 
-       
-	for(var count = 0; count < GetColums.length ; count++){
-		var x = GetColums[count];
-	    GetDEStoTIMEColums.push(x);
-	}
-       
-    var sorted = GetDEStoTIMEColums.sort(function(a,b){ a = new Date(a.getElementsByClassName("DEStoTIME")[0].innerHTML);  b = new Date(b.getElementsByClassName("DEStoTIME")[0].innerHTML); return a - b ; } ); 
-    
-	MainContainer.innerHTML = "";
-    for( var i = 0; i < sorted.length; ++i ) {
-			
-		MainContainer.appendChild(sorted[i]);
-		
-    }
-       
-	
-	
-}
-
-
-
 function ProfileViewer(ProfileID){
 	
 	var proUserDoc
@@ -3507,12 +3569,17 @@ firebase.firestore().collection("Users").doc(OfferOject.offerposterID).get().the
 
  function OffersByUserCreatorApplicationsFullViewer(AdObject){	
 
+    ChangeDisplayContainer("ContainerDisplay0");
+	SearchBoxLOCKER = false;	
+    if(SearchBox != null){SearchBox.style.height = "0px";}
+ 
     var FirstUSER = {info : null , proimage : null};
 	var SecondUSER = {info : null , proimage : null};
 	var OfferOject = AdObject.offerinfo;
 	var OfferPosterUSER = AdObject.offerer;
+	var RealTimeRun = false;
 	
-	console.log(OfferOject);
+	
  
     if(UserID == AdObject.posterinfo.uid){
 		FirstUSER.info = AdObject.posterinfo;
@@ -3531,12 +3598,7 @@ firebase.firestore().collection("Users").doc(OfferOject.offerposterID).get().the
 		
 	}	
  
-    ChangeDisplayContainer("ContainerDisplay0");
-	SearchBoxLOCKER = false;	
-    if(SearchBox != null){SearchBox.style.height = "0px";}
-	
-   
-					
+  				
 	var MyAggreemts = document.createElement("DIV");
 	MyAggreemts.className = "MyAggrementsColumn";
 	MyAggreemts.style.height = "auto";
@@ -3558,7 +3620,6 @@ firebase.firestore().collection("Users").doc(OfferOject.offerposterID).get().the
 
 	  }
 	else{
-		
 		
 	           var OfferDesTitleTEXT = document.createElement("P");
 	           OfferDesTitleTEXT.className = "SearchAdsFullViewDESCRIPTIONText";
@@ -3597,16 +3658,9 @@ firebase.firestore().collection("Users").doc(OfferOject.offerposterID).get().the
 	
 	});
 	
+
 	
-		
-   
-	
-	
-    function AggrementExistFunction(){
-		
-		
-	
-		
+    function AggrementExistFunction(){	
 	
     var CallNowButton =  document.createElement("A");
     CallNowButton.href = "tel:" + SecondUSER.phone;
@@ -3618,7 +3672,7 @@ firebase.firestore().collection("Users").doc(OfferOject.offerposterID).get().the
      var OfferPosterImage =  document.createElement("IMG");
     OfferPosterImage.src = SecondUSER.proimage;
     OfferPosterImage.onclick = function(){
-         ProfileViewer(OfferPosterUSER.info.uid);
+         ProfileViewer(OfferPosterUSER.uid);
     }
 		
 	MyAggreemts.appendChild(OfferPosterImage);
@@ -3675,27 +3729,27 @@ firebase.firestore().collection("Users").doc(OfferOject.offerposterID).get().the
 	
 	var CommentZone = document.createElement("DIV");
 	CommentZone.className = "CommentSectionSearchAdsFullView";
+	CommentZone.id = AdObject.mainadinfo.id + "CommentZone";
 	
 	MyAggreemts.appendChild(CommentZone);
 	
-		firebase.firestore().collection("Messages")
-						    .where("aggrementID", "==", AdObject.mainadinfo.id)
-						    .limit(5).get().then(function(ONEquerySnapshot) {   	 	// For the job Posters 
+		firebase.firestore().collection("Agreements").doc(AdObject.mainadinfo.id)
+	                    .collection("Messages")
+						.orderBy("postedTime", "desc")
+						.limit(5).get().then(function(ONEquerySnapshot) {   
 
 
               ONEquerySnapshot.forEach(function(ONEdoc) {     
 
-			  MessageColumnCreator (CommentZone , ONEdoc.data() , AdObject);
-         
+			  MessageColumnCreator (true , ONEdoc.data() , AdObject);
+        
          
 		           });
 		
 		
 
-	         });
-	
-	
-		
+	         }); 
+
     var AdQuestionWriterColum = document.createElement("DIV");
 	AdQuestionWriterColum.className = "AdQuestionWriterColum";
 	
@@ -3747,27 +3801,73 @@ firebase.firestore().collection("Users").doc(OfferOject.offerposterID).get().the
    ConversationInputFieldFRAME.appendChild(ConversationInputField);
   
 
-	
 
+  }
+  
+  	Container.appendChild(MyAggreemts);
 	
-	
+	if(AdObject.aggrement != null){
+		UpdatedMessageRead(AdObject);
+	}
+  
+ 
 
+
+
+ 
+	
+}
+
+
+  
+  function UpdatedMessageRead(AdObject){
+	  
+	  
+	   if(AdObject.aggrement.lastMsgBy == UserID){
+	  
+	  for(var count = 0 ; count < MyAggOBJECTS.length ; count ++){
+		  
+		  if(AdObject.mainadinfo.id == MyAggOBJECTS[count].mainadinfo.id){
+			  
+			  MyAggOBJECTS[count].aggrement.lastMsgBy = "";
+			  
+			  
+			    firebase.firestore().collection("Agreements").doc(AdObject.mainadinfo.id)
+		                  .update({
+               
+			                lastMsgBy: ""
+
+                         });
+			  
+			  console.log("Changed");
+			  
+		  }
+		  
+	  }
+	  
+	 
+	  
+  }
+	  
+	
+	  
+	  
   }
 
 
- 	Container.appendChild(MyAggreemts);
-	
-}
+
+
 
 
 function AggrementMessageSaver(messageOBJ,AdObject,Zone){
 	
 	AdObject.aggrement.updateTime = new Date();
 	AdObject.aggrement.lastMsgBy = messageOBJ.messageRCVR;
-	
-	firebase.firestore().doc("Messages/" + messageOBJ.messageID).set(messageOBJ).then(function(){	
+
+		
+	firebase.firestore().doc("Agreements/" + AdObject.aggrement.id + "/Messages/" + messageOBJ.messageID).set(messageOBJ).then(function(){
 			
-		MessageColumnCreator (Zone , messageOBJ , AdObject);
+	MessageColumnCreator (false , messageOBJ , AdObject);  
 		
 		firebase.firestore().doc("Agreements/" + AdObject.aggrement.id).set(AdObject.aggrement).then(function() {
            console.log(UserID + " Last messager");
@@ -3781,11 +3881,10 @@ function AggrementMessageSaver(messageOBJ,AdObject,Zone){
 		   senderID : messageOBJ.messagePOSTER,
 		   receiverID : messageOBJ.messageRCVR
 	
-	     }).then(function() {
-           console.log("Document successfully written!");
+	 
           });
        		
-			
+		
 	});	
 	
 	
@@ -3794,7 +3893,14 @@ function AggrementMessageSaver(messageOBJ,AdObject,Zone){
 
 
 
-function MessageColumnCreator (Zone , messageOBJ , AdObject){
+function MessageColumnCreator (Sort , messageOBJ , AdObject){
+	
+	var GetElement = document.getElementById(messageOBJ.messageID);
+						  if(GetElement != null){
+							  return;
+						  }
+						  
+	var Zone = document.getElementById(AdObject.mainadinfo.id + "CommentZone");
 	
     var ParaColor;		
 
@@ -3802,14 +3908,19 @@ function MessageColumnCreator (Zone , messageOBJ , AdObject){
 	var TimeAgo = DateDiffFunction( new Date() , messageOBJ.postedTime);
 	
 	var MainColumn = document.createElement("DIV");
+	MainColumn.id = messageOBJ.messageID;
 	MainColumn.className = "CommentColumn";	
     MainColumn.innerHTML = "<p class ='DEStoTIME' hidden>" + messageOBJ.postedTime + " </p>"; 	
 	Zone.appendChild(MainColumn);
-	
+	if(Sort == true){
+	SortingDivElmentsTimeASC(Zone,"CommentColumn");
+	}
 	firebase.firestore().collection("Users").doc(messageOBJ.messagePOSTER).get().then(function(USERdoc) {
 	
+
     	
-	 firebase.storage().ref('UserProPics/' + USERdoc.id + '/Propic.png').getDownloadURL().then(function(url) {
+	firebase.storage().ref('UserProPics/' + USERdoc.id + '/Propic.png').getDownloadURL().then(function(url) {
+	 
 	 
 	
 	var leftSideComment = document.createElement("DIV");
@@ -3868,7 +3979,8 @@ function MessageColumnCreator (Zone , messageOBJ , AdObject){
 	TimeComment. className = "TimeComment";	
     TimeComment.innerHTML = "<div class = 'TimeSmallText'> " + TimeAgo + " </div>";	
 	MainColumn.appendChild(TimeComment);
-	SortingDivElmentsTimeASC(Zone,"CommentColumn")
+	
+
 	
 	
 	     });	 
@@ -3900,7 +4012,7 @@ function MessageColumnCreator (Zone , messageOBJ , AdObject){
 				 adposterID : AdPosterID,
 				 postedTime : new Date(),
 				 updateTime : new Date(),
-				 lastMsgBy     : UserID
+				 lastMsgBy     : OfferPosterID
 		
 		}).then(function(){	
 		
@@ -4060,6 +4172,7 @@ function AggrementColumUI(Tempdata){
 	
 		  
   var Cover = document.createElement("DIV");
+  Cover.id = Tempdata.aggrement.id + "AGG";
   Cover.className = "Cover";
   
   if(Tempdata.aggrement.lastMsgBy == UserID){Cover.style.fontWeight = "bold";}
@@ -4067,7 +4180,7 @@ function AggrementColumUI(Tempdata){
   
   Cover.innerHTML = Tempdata.aggrement.id + "<br>" + Tempdata.offerinfo.offerprice + "<br>" + SecondUSER.info.name 
   + "<br> <img src="+ SecondUSER.proimage + " height='50' width='50'> " 
-   + "<p class ='DEStoTIME' hidden>" + Tempdata.aggrement.updateTime + " </p>"; 
+   + "<p id = '" + Tempdata.aggrement.id + "AGGDEStoTIME' class ='DEStoTIME' hidden>" + Tempdata.aggrement.updateTime + " </p>"; 
  
   Cover.onclick = function(){
          
