@@ -20,13 +20,14 @@ function LoginButtonLoader(){
 	
 	var LoginDiv = document.getElementById("LoginDiv");
 	LoginDiv.innerHTML = " <button class='AgreeButton' onclick='GoogleLogin()' >Google</button> " + 
-	" <button  class='AgreeButton' onclick='FaceBookLogin()' >Facebook</button>";
+	" <button  class='AgreeButton' onclick='FaceBookLogin()' >Facebook</button>" ;
 	
 	
 	
 	
 	
 }
+
 
 
 function GoogleLogin(){
@@ -120,7 +121,7 @@ function FaceBookLogin(){
              Phone = data.phone.number;
 	          setTimeout(function(){
 	                 
-					RegisterUser(UserID,DisplayName,Phone,Email,PhotoURL);
+					RegisterUser(Phone);
 					 
                }, 1000);
       

@@ -1749,9 +1749,29 @@ function geolocate() {
 
 
 
-function RegisterUser(UserID,displayName,Phone,Email,PhotoURL){
+function RegisterUser(Phone){
 	
 	
+ $.get('http://localhost/public/signupserver.php', { UID_post: UserID, NAME_post: DisplayName , 
+                                     EMAIL_post: Email, PHONE_post: Phone, PhotoURL_post: PhotoURL
+									 }).done(function(data) {
+									 
+      if(data.indexOf("User Successfully Created") >= 0){
+		                   
+						   ConfirmAnimation();
+							setTimeout(function(){
+									 location.replace("index.html");
+					 
+                            }, 4100);
+		 
+		  
+	  }else{
+		   alert("Could Not Save user");
+	  }										 
+   
+ });
+ 
+ /*
 	
 	firebase.firestore().collection("Users").doc(UserID).get().then(function(doc) {
                     if (doc.exists) {
@@ -1789,11 +1809,7 @@ function RegisterUser(UserID,displayName,Phone,Email,PhotoURL){
 					 
 					    }).then(function(){
 							
-					        ConfirmAnimation();
-							setTimeout(function(){
-									 location.replace("index.html");
-					 
-                            }, 4100);
+					       
 					 
 				       });
 	
@@ -1813,12 +1829,28 @@ function RegisterUser(UserID,displayName,Phone,Email,PhotoURL){
 	          });
 	
 	
-	
+	*/
 	
 	
 	
 }
 
+
+function UserProImageUpload(){
+	
+	  
+		    fetch(PhotoURL)
+            .then(res => res.blob()) // Gets the response and returns it as a blob
+            .then(blob => {
+				
+			
+				
+				
+			});
+			
+ 
+	
+}
 
 
 function ConfirmAnimation(){
@@ -2245,6 +2277,8 @@ function GenerateSearchAllAds(){
 	var firestore = firebase.firestore().collection("MainAds")
 	                                    .where("updatedTime", ">", MinimumDate)
 										.where("updatedTime", "<", new Date());	
+										
+										/*
 	
 	if(SearchAdOBJECTS.length > 0){
 	  
@@ -2256,12 +2290,13 @@ function GenerateSearchAllAds(){
 		return;
 	   
 	}
-	 
+	 */
     
   		
     var OnlyMyAdsRef = firestore.orderBy("updatedTime", "desc").limit(DataLengthLimit); 
 	OnlyMyAdsRef.get().then(function(ONEquerySnapshot) {
 		
+		console.log(ONEquerySnapshot.docs.length);
 		
 		if(ONEquerySnapshot.docs.length == 0){
 
@@ -2283,7 +2318,7 @@ function GenerateSearchAllAds(){
 	        return;	   
 	     }	
        
-	     SaveSearchAdOBJECTS(ONEdoc.data());
+	    // SaveSearchAdOBJECTS(ONEdoc.data());
          
    
 	
@@ -3427,7 +3462,7 @@ function ProfileViewer(ProfileID){
 	if(UserID == ProfileID){
 		
 		proUserDoc = UserData;
-		proUserImage = PhotoURL;
+		proUserImage = 'UserPropics/' + UserID + '.' + UserData.proExt; 
 		CreateProfileUI();
 		
 	}
@@ -4422,6 +4457,7 @@ function MonthToString(month){
 	
 	
 }
+
 
 
 /*

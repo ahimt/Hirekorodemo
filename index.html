@@ -83,7 +83,7 @@
 
  <form method="get" action="https://www.accountkit.com/v1.0/basic/dialog/sms_login/">
   <input type="hidden" name="app_id" value="137145246916295">
-  <input type="hidden" name="redirect" value="http://localhost/FinalWork/PhoneVerified.html">
+  <input type="hidden" name="redirect" value="http://localhost/public/PhoneVerified.html">
   <input type="hidden" name="state" value="abcd">
   <input type="hidden"   name="country_code" value="+61">
   <input type="hidden" name="fbAppEventsEnabled" value=true>
@@ -103,6 +103,8 @@
   
   	
 <script>
+
+
  
 
 document.getElementById("TermsAndConditionAAA").style.width = "0px";
@@ -121,33 +123,41 @@ firebase.auth().onAuthStateChanged(function(user) {
 
 if(user){
 
-   
-	
+
+
+
+
             getLocation();  
 		    DisplayName = user.displayName;
             Email = user.email;
             PhotoURL = user.photoURL;
-            UserID = user.uid; 		
-	    
-	  
-			document.getElementById("LoginDiv").style.width = "0px";
+            UserID = user.uid; 
 			
-	firebase.firestore().collection("Users").doc(UserID).get().then(function(doc) {
-    if (doc.exists) {
-	
-      UserData = doc.data();
-      CreatingAllTheNavigation();
-	  
+		    document.getElementById("LoginDiv").style.width = "0px";
+			
+			
+			
+			$.getJSON('GetUser.php?UID_post='+ UserID,function (data)
+            {  
+                 if(data.uid == UserID){
+				 
+				       UserData = data;
+                       CreatingAllTheNavigation();
+					   console.log("Logged In");
+				 
+				 }
+				 else{
+				 
+				    document.getElementById("TermsAndConditionAAA").style.width = "100%";
+				     console.log("Not Saved");
+				 }
+			  
+      
+            },'jsonp');
+			
+	    
+		
 
-    } else {
-	
-  
-	    document.getElementById("TermsAndConditionAAA").style.width = "100%";
-		 
-          
-    }
-	
-	});	
 	
  
 
